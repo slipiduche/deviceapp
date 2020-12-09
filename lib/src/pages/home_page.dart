@@ -128,7 +128,7 @@ class HomePage extends StatelessWidget {
                                 color: Colors.black87, fontSize: 15.00),
                           ),
                         ),
-                      ],
+                      ], //fin
                     ),
                   ),
                 ],
