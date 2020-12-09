@@ -54,7 +54,7 @@ class HomePage extends StatelessWidget {
                     fontSize: 30.0,
                     fontWeight: FontWeight.w300))),
         Container(
-          height: 250.0,
+          height: 350.0,
           width: 350.0,
           decoration: BoxDecoration(
             color: Colors.white,
@@ -93,7 +93,9 @@ class HomePage extends StatelessWidget {
                     //alignment: Alignment.centerLeft,
                     child: homeIcon(70, colorMedico1),
                   ),
-                  SizedBox(width: 10.0,),
+                  SizedBox(
+                    width: 10.0,
+                  ),
                   Container(
                     margin: const EdgeInsets.only(left: 10.0, right: 0.0),
                     child: Column(
@@ -130,24 +132,126 @@ class HomePage extends StatelessWidget {
                                 color: Colors.black87, fontSize: 15.00),
                           ),
                         ),
-                      ], 
+                      ],
                     ),
                   ),
-                SizedBox(
-                  width: 30.0,
-                ),
-                Container(
-                          width:60.0,
-                          height:60.0,
-                          decoration: BoxDecoration(
-                            gradient: gradiente,
-                            borderRadius: BorderRadius.circular(100),
-                          ),
-                        ),
+                  SizedBox(
+                    width: 30.0,
+                  ),
+                  Container(
+                    width: 60.0,
+                    height: 60.0,
+                    decoration: BoxDecoration(
+                      gradient: gradiente,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
                 ],
               ),
             ),
-          Divider(color: Colors.black,),
+            Divider(
+              color: Colors.black,
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+                height: 40.0,
+                width: 350.0,
+                decoration: BoxDecoration(
+                  color: colorMedico1,
+                ),
+                child: Text('  Non-configured',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 30.0,
+                        fontWeight: FontWeight.w300))),
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 15.0, right: 0.0),
+              child: Text(
+                " A non-Configured device will  have a gray dot indicating that are connected to the network",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 16.00,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Container(
+              height: 80.0,
+              width: 350.0,
+              //alignment: Alignment.bottomLeft,
+              margin: const EdgeInsets.only(left: 10.0, right: 0.0),
+              child: Row(
+                children: [
+                  Container(
+                    height: 70.0,
+                    width: 70.0,
+                    //alignment: Alignment.centerLeft,
+                    child: tagIcon(70, colorMedico1),
+                  ),
+                  SizedBox(
+                    width: 10.0,
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10.0, right: 0.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 150,
+                          height: 30,
+                          //alignment: Alignment.topLeft,
+                          child: Text(
+                            "Speaker2",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 25.00),
+                          ),
+                        ),
+                        Container(
+                          width: 150,
+                          height: 20,
+                          child: Text(
+                            "type: Speaker",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 15.00),
+                          ),
+                        ),
+                        Container(
+                          width: 150,
+                          height: 20,
+                          child: Text(
+                            "Chip ID: 95ds3546587",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                color: Colors.black87, fontSize: 15.00),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 30.0,
+                  ),
+                  Container(
+                    width: 60.0,
+                    height: 60.0,
+                    decoration: BoxDecoration(
+                      gradient: gradiente,
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ]),
         ),
         Container(),
