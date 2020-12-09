@@ -78,7 +78,7 @@ class HomePage extends StatelessWidget {
               color: Colors.black,
             ),
             SizedBox(
-              height: 10.0,
+              height: .0,
             ),
             Container(
               height: 80.0,
@@ -93,9 +93,11 @@ class HomePage extends StatelessWidget {
                     //alignment: Alignment.centerLeft,
                     child: homeIcon(70, colorMedico1),
                   ),
+                  SizedBox(width: 10.0,),
                   Container(
                     margin: const EdgeInsets.only(left: 10.0, right: 0.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Container(
                           width: 150,
@@ -128,9 +130,20 @@ class HomePage extends StatelessWidget {
                                 color: Colors.black87, fontSize: 15.00),
                           ),
                         ),
-                      ], //fin
+                      ], 
                     ),
                   ),
+                SizedBox(
+                  width: 30.0,
+                ),
+                Container(
+                          width:60.0,
+                          height:60.0,
+                          decoration: BoxDecoration(
+                            gradient: gradiente,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                        ),
                 ],
               ),
               //child: homeIcon(70,colorMedico1),
