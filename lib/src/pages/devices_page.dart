@@ -33,7 +33,23 @@ class _DevicePageState extends State<DevicePage> {
                 borderRadius: BorderRadius.circular(100.00)),
               child: devicesIcon(98.0, colorMedico),  
             ),
-          ]
+                  SizedBox(
+          height: 8.0,
+        ),
+        Text(
+          'Devices',
+          style: TextStyle(
+              color: colorVN, fontSize: 40.0, fontWeight: FontWeight.w400),
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Text('Select a device to configure',
+            style: TextStyle(
+                color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
+        SizedBox(
+          height: 10.0,
+        ),]
       ),
       //child:Colum()
     )));

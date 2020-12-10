@@ -38,9 +38,9 @@ class HomePage extends StatelessWidget {
         SizedBox(
           height: 10.0,
         ),
-        Text('help',
+        Text('Help',
             style: TextStyle(
-                color: colorVN, fontSize: 30.0, fontWeight: FontWeight.w300)),
+                color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
         SizedBox(
           height: 10.0,
         ),
