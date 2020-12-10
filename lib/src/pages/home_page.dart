@@ -245,7 +245,7 @@ class HomePage extends StatelessWidget {
                     width: 60.0,
                     height: 60.0,
                     decoration: BoxDecoration(
-                      gradient: gradiente,
+                      gradient: gradiente1,
                       borderRadius: BorderRadius.circular(100),
                     ),
                   ),
