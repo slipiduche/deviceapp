@@ -1,8 +1,10 @@
 import 'package:deviceapp/src/constants.dart';
 import 'package:deviceapp/src/icons/icons.dart';
+import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
+  
   const HomePage({Key key}) : super(key: key);
 
   Widget build(BuildContext context) {
@@ -263,15 +265,22 @@ class HomePage extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                    width: 200,
-                    height: 80,
+                    width: 185,
+                    height: 50,
                     child: Text("Scan wifi network to locate the devices",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.black87,
                           fontSize: 20.0,
-                          fontWeight: FontWeight.w300,
-                        )))
+                          fontWeight: FontWeight.w400,
+                        ))),
+                SizedBox(width: 10),
+                Container(
+                  //alignment: Alignment.center,
+                  height: 50,
+                  width: 150,
+                  child: submitButton('START',(){}),
+                ),
               ],
             )),
       ]),
