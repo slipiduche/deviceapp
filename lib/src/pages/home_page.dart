@@ -40,7 +40,7 @@ class HomePage extends StatelessWidget {
             style: TextStyle(
                 color: colorVN, fontSize: 30.0, fontWeight: FontWeight.w300)),
         SizedBox(
-          height: 20.0,
+          height: 10.0,
         ),
         Container(
             height: 40.0,
@@ -91,7 +91,7 @@ class HomePage extends StatelessWidget {
                     height: 70.0,
                     width: 70.0,
                     //alignment: Alignment.centerLeft,
-                    child: homeIcon(70, colorMedico1),
+                    child: speakerIcon(70, colorMedico1),
                   ),
                   SizedBox(
                     width: 10.0,
@@ -194,7 +194,7 @@ class HomePage extends StatelessWidget {
                     height: 70.0,
                     width: 70.0,
                     //alignment: Alignment.centerLeft,
-                    child: tagIcon(70, colorMedico1),
+                    child: speakerIcon(70, colorMedico1),
                   ),
                   SizedBox(
                     width: 10.0,
@@ -239,7 +239,7 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    width: 30.0,
+                    width: 20.0,
                   ),
                   Container(
                     width: 60.0,
@@ -254,7 +254,26 @@ class HomePage extends StatelessWidget {
             ),
           ]),
         ),
-        Container(),
+        SizedBox(
+          height: 20,
+        ),
+        Container(
+            width: 350,
+            height: 80,
+            child: Row(
+              children: [
+                Container(
+                    width: 200,
+                    height: 80,
+                    child: Text("Scan wifi network to locate the devices",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black87,
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w300,
+                        )))
+              ],
+            )),
       ]),
     )));
   }

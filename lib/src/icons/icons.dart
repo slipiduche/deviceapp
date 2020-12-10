@@ -158,3 +158,35 @@ Widget wifiIcon(double size, Color color) {
     height: size,
   );
 }
+
+Widget speakerIcon(double size, Color color) {
+  return Image(
+    image: AssetImage('assets/speaker.png'),
+    width: size,
+    height: size,
+  );
+}
+
+Widget readerIcon(double size, Color color) {
+  return Image(
+    image: AssetImage('assets/wifi.png'),
+    width: size,
+    height: size,
+  );
+}
+
+Widget devicesIcon(double size, Color color) {
+  return Image(
+    image: AssetImage('assets/devices.png'),
+    width: size,
+    height: size,
+  );
+}
+
+Widget registerIcon(double size, Color color) {
+  return Image(
+    image: AssetImage('assets/wifi.png'),
+    width: size,
+    height: size,
+  );
+}
