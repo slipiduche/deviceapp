@@ -1,5 +1,6 @@
 import 'package:deviceapp/src/constants.dart';
 import 'package:deviceapp/src/icons/icons.dart';
+import 'package:deviceapp/src/provider/my-globals.dart';
 //import 'package:deviceapp/src/pages/devices_page.dart';
 import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -280,6 +281,8 @@ class HomePage extends StatelessWidget {
                   height: 50,
                   width: 150,
                   child: submitButton('START', () {
+                    globaType = 3;
+                    globalChipID = "ChipID";
                     Navigator.pushNamed(context, 'devicePage1');
                   }),
                 ),

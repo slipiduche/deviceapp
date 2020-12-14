@@ -1,10 +1,11 @@
 import 'package:deviceapp/src/icons/icons.dart';
-import 'package:deviceapp/src/provider/global_classes.dart';
+
+import 'package:deviceapp/src/provider/my-globals.dart';
 import 'package:flutter/material.dart';
 import '../constants.dart';
 
-final deviceData =
-    new GlobalVariables(deviceType: 3, chipID: "chipID", status: 1);
+/*final deviceData =
+    new GlobalVariables(deviceType: 3, chipID: "chipID", status: 1);*/
 String title;
 
 class DevicePage1 extends StatefulWidget {
@@ -17,9 +18,9 @@ class DevicePage1 extends StatefulWidget {
 class _DevicePageState1 extends State<DevicePage1> {
   @override
   Widget build(BuildContext context) {
-    if (deviceData.deviceType == 1) title = "Speaker";
-    if (deviceData.deviceType == 2) title = "Reader";
-    if (deviceData.deviceType == 3) title = "Register";
+    if (globaType == 1) title = "Speaker";
+    if (globaType == 2) title = "Reader";
+    if (globaType == 3) title = "Register";
 
     return SafeArea(
         child: Scaffold(
@@ -39,7 +40,7 @@ class _DevicePageState1 extends State<DevicePage1> {
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(100.00)),
           
-          child: selectIcon(98.0, colorMedico,deviceData.deviceType),
+          child: selectIcon(98.0, colorMedico,globaType),
         ),
         SizedBox(
           height: 8.0,
