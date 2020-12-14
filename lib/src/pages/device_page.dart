@@ -1,4 +1,5 @@
 import 'package:deviceapp/src/icons/icons.dart';
+import 'package:deviceapp/src/provider/global_classes.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -35,11 +36,13 @@ class _DevicePageState extends State<DevicePage> {
         SizedBox(
           height: 8.0,
         ),
-        Text(
-          'Devices',
+        if(GlobalData.deviceType == 1){
+          Text(
+          'Speaker',
           style: TextStyle(
               color: colorVN, fontSize: 40.0, fontWeight: FontWeight.w400),
-        ),
+          )
+        },
         SizedBox(
           height: 10.0,
         ),
