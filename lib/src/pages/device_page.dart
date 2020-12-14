@@ -1,19 +1,26 @@
 import 'package:deviceapp/src/icons/icons.dart';
 import 'package:deviceapp/src/provider/global_classes.dart';
 import 'package:flutter/material.dart';
-
 import '../constants.dart';
 
-class DevicePage extends StatefulWidget {
-  DevicePage({Key key}) : super(key: key);
+final deviceData =
+    new GlobalVariables(deviceType: 3, chipID: "chipID", status: 1);
+String title;
+
+class DevicePage1 extends StatefulWidget {
+  DevicePage1({Key key}) : super(key: key);
 
   @override
-  _DevicePageState createState() => _DevicePageState();
+  _DevicePageState1 createState() => _DevicePageState1();
 }
 
-class _DevicePageState extends State<DevicePage> {
+class _DevicePageState1 extends State<DevicePage1> {
   @override
   Widget build(BuildContext context) {
+    if (deviceData.deviceType == 1) title = "Speaker";
+    if (deviceData.deviceType == 2) title = "Reader";
+    if (deviceData.deviceType == 3) title = "Register";
+
     return SafeArea(
         child: Scaffold(
             body: Container(
@@ -31,22 +38,21 @@ class _DevicePageState extends State<DevicePage> {
           width: 123,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(100.00)),
-          child: devicesIcon(98.0, colorMedico),
+          
+          child: selectIcon(98.0, colorMedico,deviceData.deviceType),
         ),
         SizedBox(
           height: 8.0,
         ),
-        if(GlobalData.deviceType == 1){
-          Text(
-          'Speaker',
+        Text(
+          title,
           style: TextStyle(
               color: colorVN, fontSize: 40.0, fontWeight: FontWeight.w400),
-          )
-        },
+        ),
         SizedBox(
           height: 10.0,
         ),
-        Text('Select a device to configure',
+        Text('hola',
             style: TextStyle(
                 color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
         SizedBox(

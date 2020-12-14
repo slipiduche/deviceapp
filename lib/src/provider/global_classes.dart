@@ -1,5 +1,12 @@
+class GlobalVariables {
+  int deviceType;
+  int status;
+  String chipID;
 
-
-class  GlobalData {
-    var deviceType = 0  ;
+  //Constructor/////
+  GlobalVariables({
+    this.deviceType,
+    this.chipID,
+    this.status,
+  });
 }

@@ -280,7 +280,7 @@ class HomePage extends StatelessWidget {
                   height: 50,
                   width: 150,
                   child: submitButton('START', () {
-                    Navigator.pushNamed(context, 'devicePage');
+                    Navigator.pushNamed(context, 'devicePage1');
                   }),
                 ),
               ],

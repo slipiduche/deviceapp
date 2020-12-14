@@ -190,3 +190,27 @@ Widget registerIcon(double size, Color color) {
     height: size,
   );
 }
+
+Widget selectIcon(double size, Color color, int type) {
+  if (type == 1) {
+    return Image(
+      image: AssetImage('assets/speaker.png'),
+      width: size,
+      height: size,
+    );
+  }
+  if (type == 2) {
+    return Image(
+      image: AssetImage('assets/wifi.png'),
+      width: size,
+      height: size,
+    );
+  }
+  if (type == 3) {
+    return Image(
+      image: AssetImage('assets/wifi.png'),
+      width: size,
+      height: size,
+    );
+  }
+}

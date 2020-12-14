@@ -1,3 +1,4 @@
+import 'package:deviceapp/src/pages/device_page.dart';
 import 'package:deviceapp/src/pages/devices_page.dart';
 import 'package:deviceapp/src/pages/home_page.dart';
 import 'package:flutter/material.dart';
@@ -8,5 +9,6 @@ Map<String, WidgetBuilder> getAppRoutes() {
 
     'homePage': (BuildContext context) => HomePage(),
     'devicePage': (BuildContext context) => DevicePage(),
+    'devicePage1': (BuildContext context) => DevicePage1(),
   };
 }
