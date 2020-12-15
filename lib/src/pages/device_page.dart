@@ -24,43 +24,44 @@ class _DevicePageState1 extends State<DevicePage1> {
 
     return SafeArea(
         child: Scaffold(
-            body: Container(
+            body: SingleChildScrollView(
+                          child: Container(
       color: colorBackGround,
-      child: SingleChildScrollView(
-              child: Column(children: [
-          Container(
+      child: Column(children: [
+        Container(
               height: 10.0,
               width: double.infinity,
               decoration: BoxDecoration(
                 gradient: gradiente,
               )),
-          SizedBox(height: 26.0),
-          Container(
-            height: 123,
-            width: 123,
-            decoration: BoxDecoration(
+        SizedBox(height: 26.0),
+        Container(
+          height: 123,
+          width: 123,
+          decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(100.00)),
-            child: selectIcon(98.0, colorMedico, globalType),
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          Text(
-            title,
-            style: TextStyle(
+          child: selectIcon(98.0, colorMedico, globalType),
+        ),
+        SizedBox(
+          height: 8.0,
+        ),
+        Text(
+          title,
+          style: TextStyle(
                 color: colorVN, fontSize: 40.0, fontWeight: FontWeight.w400),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text('Wifi Network',
+        ),
+        SizedBox(
+          height: 10.0,
+        ),
+        Text('Wifi Network',
               style: TextStyle(
                   color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
-          SizedBox(
-            height: 10.0,
-          ),
-          
-          Container(
+        SizedBox(
+          height: 10.0,
+        ),
+        Container(
+          child: Column(children:[
+               Container(
               height: 100,
               width: 360,
               child: Column(children: [
@@ -95,8 +96,12 @@ class _DevicePageState1 extends State<DevicePage1> {
                       ),
                     )),
               ])),
-          SizedBox(height: 10.00),
-          Container(
+        SizedBox(height: 10.00),
+        
+          ],),
+        ),
+       
+        Container(
               height: 100,
               width: 360,
               child: Column(children: [
@@ -131,8 +136,8 @@ class _DevicePageState1 extends State<DevicePage1> {
                       ),
                     )),
               ])),
-          SizedBox(height: 20.00),
-           Container(
+        SizedBox(height: 10.00),
+        Container(
               height: 100,
               width: 360,
               child: Column(children: [
@@ -167,9 +172,8 @@ class _DevicePageState1 extends State<DevicePage1> {
                       ),
                     )),
               ])),
-        ]),
-      ),
-      //child:Colum()
-    )));
+      ]),
+    ),
+            )));
   }
 }
