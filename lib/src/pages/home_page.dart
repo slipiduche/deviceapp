@@ -281,7 +281,7 @@ class HomePage extends StatelessWidget {
                   height: 50,
                   width: 150,
                   child: submitButton('START', () {
-                    globaType = 3;
+                    globalType = 3;
                     globalChipID = "ChipID";
                     Navigator.pushNamed(context, 'devicePage1');
                   }),

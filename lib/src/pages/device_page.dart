@@ -18,9 +18,9 @@ class DevicePage1 extends StatefulWidget {
 class _DevicePageState1 extends State<DevicePage1> {
   @override
   Widget build(BuildContext context) {
-    if (globaType == 1) title = "Speaker";
-    if (globaType == 2) title = "Reader";
-    if (globaType == 3) title = "Register";
+    if (globalType == 1) title = "Speaker";
+    if (globalType == 2) title = "Reader";
+    if (globalType == 3) title = "Register";
 
     return SafeArea(
         child: Scaffold(
@@ -39,8 +39,7 @@ class _DevicePageState1 extends State<DevicePage1> {
           width: 123,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(100.00)),
-          
-          child: selectIcon(98.0, colorMedico,globaType),
+          child: selectIcon(98.0, colorMedico, globalType),
         ),
         SizedBox(
           height: 8.0,
@@ -53,12 +52,47 @@ class _DevicePageState1 extends State<DevicePage1> {
         SizedBox(
           height: 10.0,
         ),
-        Text('hola',
+        Text('Wifi Network',
             style: TextStyle(
                 color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
         SizedBox(
           height: 10.0,
         ),
+        Container(
+            height: 100,
+            width: 360,
+            child: Column(children: [
+              Container(
+                alignment: Alignment.topLeft,
+                child: Text('Name',
+                    style: TextStyle(
+                        color: colorVN,
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.w300)),
+              ),
+              SizedBox(
+                height: 10.00,
+              ),
+              Container(
+                  alignment: Alignment.topLeft,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(08.00),
+                    border: Border.all(width: 1, color: Colors.black26),
+                  ),
+                  child: Container(
+                    height: 40,
+                    alignment: Alignment.center,
+                    margin: const EdgeInsets.only(left: 08.0, right: 08.0),
+                    child: TextField(
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.w300),
+                      decoration: null,
+                    ),
+                  )),
+            ])),
       ]),
       //child:Colum()
     )));

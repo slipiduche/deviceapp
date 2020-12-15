@@ -1,4 +1,4 @@
 library globals;
 
-int globaType = 0;
+int globalType = 0;
 String globalChipID = "chipID";

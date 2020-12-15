@@ -169,7 +169,7 @@ Widget speakerIcon(double size, Color color) {
 
 Widget readerIcon(double size, Color color) {
   return Image(
-    image: AssetImage('assets/wifi.png'),
+    image: AssetImage('assets/reader.png'),
     width: size,
     height: size,
   );
@@ -185,7 +185,7 @@ Widget devicesIcon(double size, Color color) {
 
 Widget registerIcon(double size, Color color) {
   return Image(
-    image: AssetImage('assets/wifi.png'),
+    image: AssetImage('assets/register.png'),
     width: size,
     height: size,
   );
@@ -201,14 +201,14 @@ Widget selectIcon(double size, Color color, int type) {
   }
   if (type == 2) {
     return Image(
-      image: AssetImage('assets/wifi.png'),
+      image: AssetImage('assets/reader.png'),
       width: size,
       height: size,
     );
   }
   if (type == 3) {
     return Image(
-      image: AssetImage('assets/wifi.png'),
+      image: AssetImage('assets/register.png'),
       width: size,
       height: size,
     );
