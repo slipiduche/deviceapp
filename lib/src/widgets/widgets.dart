@@ -27,7 +27,7 @@ Widget submitButton(text, void Function() function) {
   return RaisedButton(
       child: Text(
         text,
-        style: TextStyle(fontSize: 22, color: Colors.white),
+        style: TextStyle(fontSize: 30, color: Colors.white, fontWeight:FontWeight.w500),
       ),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
