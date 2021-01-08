@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:deviceapp/src/models/wifiscan_models.dart';
+import 'package:deviceapp/src/provider/wifi_provider.dart';
 import 'package:flutter/services.dart';
 
 import 'package:rxdart/rxdart.dart';
@@ -7,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 class WifiDataBloc {
   dispose() {
     _cargandoController?.close();
-    _tagController?.close();
+    _listController?.close();
 
     _tokenController?.close();
   }
@@ -22,44 +24,24 @@ class WifiDataBloc {
   WifiDataBloc._internal() {}
 
   final _cargandoController = new BehaviorSubject<bool>();
-  final _tagController = new BehaviorSubject<String>();
+  final _listController = new BehaviorSubject<DeviceList>();
 
   final _tokenController = new BehaviorSubject<String>();
 
   Stream<bool> get cargando => _cargandoController.stream;
-  Stream<String> get tagStream => _tagController.stream;
+  Stream<DeviceList> get listStream => _listController.stream;
 
   Stream<String> get tokenStream => _tokenController.stream;
-
-  // Future<bool> updateSong(song) async {
-  //   if (token == '' || token == null) {
-  //     login();
-  //     await Future.delayed(Duration(seconds: 1));
-
-  //     if (token != '' && token != null) {
-  //       final postData =
-  //           '{"TOKEN":"$token","TARGET":"MUSIC","FIELD1":"${song.songName}","FIELD2":"${song.artist}","FIELD3":"${song.flName}","FIELD4":"${song.id}"}';
-  //       final resp = _serverDataProvider.publishData(postData, 'APP/UPDATE');
-  //       await Future.delayed(Duration(seconds: 1));
-
-  //       return resp;
-  //     }
-  //   } else {
-  //     final postData =
-  //         '{"TOKEN":"$token","TARGET":"MUSIC","FIELD1":"${song.songName}","FIELD2":"${song.artist}","FIELD3":"${song.flName}","FIELD4":"${song.id}"}';
-  //     final resp = _serverDataProvider.publishData(postData, 'APP/UPDATE');
-  //     await Future.delayed(Duration(seconds: 1));
-
-  //     return resp;
-  //   }
-  //   return false;
-  // }
-
-  // void bindSong(Music song) {
-  //   _songController.add(song);
-  // }
+  void getNetworkList() async {
+    final list = await WifiScanConnect().scan();
+    DeviceList dList = DeviceList.fromNetworkList(list);
+    if (dList.list.length > 0) {
+      print('filtered:${dList.list[0].devName}');
+      _listController.add(dList);
+    }
+  }
 
   void deleteData() {
-    _tagController.add(null);
+    _listController.add(null);
   }
 }

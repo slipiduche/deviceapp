@@ -1,4 +1,7 @@
+import 'package:deviceapp/src/bloc/wifiData_bloc.dart';
 import 'package:deviceapp/src/icons/icons.dart';
+import 'package:deviceapp/src/models/wifiscan_models.dart';
+import 'package:deviceapp/src/provider/wifi_provider.dart';
 import 'package:flutter/material.dart';
 
 import '../constants.dart';
@@ -11,8 +14,10 @@ class DevicePage extends StatefulWidget {
 }
 
 class _DevicePageState extends State<DevicePage> {
+  WifiDataBloc scan = WifiDataBloc();
   @override
   Widget build(BuildContext context) {
+    scan.getNetworkList();
     return SafeArea(
         child: Scaffold(
             body: Container(
@@ -50,12 +55,17 @@ class _DevicePageState extends State<DevicePage> {
           height: 10.0,
         ),
         StreamBuilder(
-          stream: stream ,
-         
-          builder: (BuildContext context, AsyncSnapshot snapshot){
-            return Container(
-              child: child,
-            );
+          stream: scan.listStream,
+          builder: (BuildContext context, AsyncSnapshot<DeviceList> snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                child: Text(snapshot.data.list.length.toString()),
+              );
+            } else {
+              return Container(
+                child: Text('no data'),
+              );
+            }
           },
         ),
       ]),

@@ -50,10 +50,12 @@ class DeviceList {
   DeviceList.fromNetworkList(List<WifiNetwork> networkList) {
     if (networkList == null) return;
     networkList.forEach((element) {
+      print(element.ssid);
       if (element.ssid.startsWith('&') &&
           (element.ssid.substring(2, 3) == 'G' ||
               element.ssid.substring(2, 3) == 'R' ||
               element.ssid.substring(2, 3) == 'S')) {
+                print('filtering:${element.ssid.substring(15)}');
         list.add(WifiDevice.fromMap(element));
       }
     });
