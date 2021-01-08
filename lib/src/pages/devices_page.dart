@@ -49,8 +49,16 @@ class _DevicePageState extends State<DevicePage> {
         SizedBox(
           height: 10.0,
         ),
+        StreamBuilder(
+          stream: stream ,
+         
+          builder: (BuildContext context, AsyncSnapshot snapshot){
+            return Container(
+              child: child,
+            );
+          },
+        ),
       ]),
-      //child:Colum()
     )));
   }
 }

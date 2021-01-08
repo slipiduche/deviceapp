@@ -193,24 +193,12 @@ Widget registerIcon(double size, Color color) {
 
 Widget selectIcon(double size, Color color, int type) {
   if (type == 1) {
-    return Image(
-      image: AssetImage('assets/speaker.png'),
-      width: size,
-      height: size,
-    );
+    return speakerIcon(size, color);
   }
   if (type == 2) {
-    return Image(
-      image: AssetImage('assets/reader.png'),
-      width: size,
-      height: size,
-    );
+    return readerIcon(size, color);
   }
   if (type == 3) {
-    return Image(
-      image: AssetImage('assets/register.png'),
-      width: size,
-      height: size,
-    );
+    return registerIcon(size, color);
   }
 }
