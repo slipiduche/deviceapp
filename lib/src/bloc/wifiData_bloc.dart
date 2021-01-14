@@ -2,9 +2,12 @@ import 'dart:io';
 
 import 'package:deviceapp/src/models/wifiscan_models.dart';
 import 'package:deviceapp/src/provider/wifi_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
 import 'package:rxdart/rxdart.dart';
+import 'dart:io' show Platform;
+import 'package:wifi_connect/wifi_connect.dart';
 
 class WifiDataBloc {
   dispose() {
@@ -39,6 +42,13 @@ class WifiDataBloc {
       print('filtered:${dList.list[0].devName}');
       _listController.add(dList);
     }
+  }
+
+  Future<String> connect(
+      BuildContext context, String _ssid, String _password) async {
+    final _connection =
+        await WifiScanConnect().connect(context, _ssid, _password);
+    return _connection;
   }
 
   void deleteData() {

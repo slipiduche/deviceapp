@@ -1,9 +1,7 @@
 import 'package:deviceapp/src/constants.dart';
 import 'package:deviceapp/src/icons/icons.dart';
+import 'package:deviceapp/src/models/wifiscan_models.dart';
 import 'package:flutter/material.dart';
-
-
-
 
 int awaitUpload = 0;
 
@@ -27,7 +25,8 @@ Widget submitButton(text, void Function() function) {
   return RaisedButton(
       child: Text(
         text,
-        style: TextStyle(fontSize: 30, color: Colors.white, fontWeight:FontWeight.w500),
+        style: TextStyle(
+            fontSize: 30, color: Colors.white, fontWeight: FontWeight.w500),
       ),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -115,14 +114,14 @@ class TwoIconCard extends StatefulWidget {
   String label, description;
   Widget icon;
   dynamic icon1;
-  String path,name;
+  String path, name;
   dynamic context;
   TwoIconCard(this.label, this.description, this.icon, this.icon1, this.path,
-      this.context,this.name,
+      this.context, this.name,
       {Key key})
       : super(key: key);
   _TwoIconCardState createState() =>
-      _TwoIconCardState(label, description, icon, icon1, path, context,name);
+      _TwoIconCardState(label, description, icon, icon1, path, context, name);
 }
 
 class _TwoIconCardState extends State<TwoIconCard> {
@@ -130,14 +129,14 @@ class _TwoIconCardState extends State<TwoIconCard> {
   String label, description;
   Widget icon;
   dynamic icon1;
-  String path,name;
+  String path, name;
   dynamic contexto;
   _TwoIconCardState(this.label, this.description, this.icon, this.icon1,
-      this.path, this.contexto,this.name);
+      this.path, this.contexto, this.name);
 
   Widget build(BuildContext context) {
     if (awaitUpload == 0) {
-      return twoIconCard(label, description, icon, icon1, path, contexto,name);
+      return twoIconCard(label, description, icon, icon1, path, contexto, name);
     } else if (awaitUpload == 1) {
       return Column(
         children: <Widget>[
@@ -169,7 +168,7 @@ class _TwoIconCardState extends State<TwoIconCard> {
   }
 
   Widget twoIconCard(String label, description, Widget icon, dynamic icon1,
-      String path, dynamic context,String name) {
+      String path, dynamic context, String name) {
     String _path = path;
     print(_path);
 
@@ -216,7 +215,7 @@ class _TwoIconCardState extends State<TwoIconCard> {
               return GestureDetector(
                   onTap: () async {
                     print(_path);
-                    uploading(1,1, context);
+                    uploading(1, 1, context);
                     //awaitUpload = await UploadProvider().upload(_path,name);
                     Navigator.pop(context);
                     setState(() {});
@@ -230,29 +229,30 @@ class _TwoIconCardState extends State<TwoIconCard> {
     );
   }
 }
-void uploading(int i, songsCount,BuildContext context) {
-    showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            content: Container(
-              height: 100.0,
-              child: Column(
-                children: <Widget>[
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(colorMedico),
-                  ),
-                  Text(
-                    'Uploading...$i of $songsCount',
-                    style: TextStyle(fontSize: 20.0),
-                  )
-                ],
-              ),
+
+void uploading(int i, songsCount, BuildContext context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          content: Container(
+            height: 100.0,
+            child: Column(
+              children: <Widget>[
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(colorMedico),
+                ),
+                Text(
+                  'Uploading...$i of $songsCount',
+                  style: TextStyle(fontSize: 20.0),
+                )
+              ],
             ),
-          );
-        });
-  }
+          ),
+        );
+      });
+}
 
 Widget gradientBar(bool selected) {
   if (selected) {
@@ -355,3 +355,111 @@ class _BottomBarState extends State<BottomBar> {
     }
   }
 }
+
+Widget makeDeviceList(DeviceList devices, BuildContext _context,
+    void _function(WifiDevice network, BuildContext _context)) {
+  BuildContext listContext = _context;
+  return ListView.builder(
+      //controller: _scrollController,
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: (devices.list.length),
+      itemBuilder: (context, int index) {
+        BuildContext itemContext = listContext;
+        print(index);
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Builder(
+              builder: (_context) {
+                Widget typeIcon;
+                Widget _statusIcon;
+                String _status;
+                String _devType;
+                if (devices.list[index].devType == 'G') {
+                  _devType = 'Register';
+                  typeIcon = registerIcon(60.0, colorMedico);
+                } else if (devices.list[index].devType == 'S') {
+                  _devType = 'Speaker';
+                  typeIcon = speakerIcon(60.0, colorMedico);
+                } else if (devices.list[index].devType == 'R') {
+                  _devType = 'Reader';
+                  typeIcon = readerIcon(60.0, colorMedico);
+                }
+                switch (int.parse(devices.list[index].devStatus)) {
+                  case 0:
+                    _status = 'Unconfigured';
+                    break;
+                  case 1:
+                    _status = 'Configured';
+                    break;
+                }
+                return GestureDetector(
+                  onTap: () {
+                    _function(devices.list[index], _context);
+                  },
+                  child: deviceCard(devices.list[index], typeIcon, _status,
+                      _devType, _context),
+                );
+              },
+            ),
+            Divider(),
+          ],
+        );
+      });
+}
+
+Widget deviceCard(WifiDevice device, Widget typeIcon, String status,
+    String devType, BuildContext context) {
+  return Card(
+      elevation: 5.0,
+      color: Colors.white,
+      child: Container(
+          height: 100,
+          width: MediaQuery.of(context).size.width - 30,
+          child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 20.0),
+              child: Row(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(child: Container()),
+                    typeIcon,
+                    Expanded(child: Container()),
+                    Container(
+                      width: MediaQuery.of(context).size.width - 180,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            device.devName,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          Text(
+                            'Type: ' + devType,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w100),
+                          ),
+                          Text(
+                            'ChipId: ' + device.devChipId,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w100),
+                          ),
+                        ],
+                      ),
+                    ),
+                    statusIcon(60.0, int.parse(device.devStatus)),
+                    Expanded(child: Container()),
+                  ]))));
+}
+

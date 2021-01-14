@@ -36,16 +36,16 @@ class WifiScanConnect {
     // });
   }
 
-  Future<String> connect(BuildContext context) async {
+  Future<String> connect(BuildContext context, _ssid, _password) async {
     // setState(() {
     //   connectSuccess = '...';
     // });
     try {
       await WifiConnect.connect(
         context,
-        ssid: ssidControl.text,
-        password: passwordControl.text,
-        hidden: hidden,
+        ssid: _ssid,
+        password: _password,
+        hidden: false,
         securityType: hidden ? SecurityType.wpa : SecurityType.auto,
       );
     } on WifiConnectException catch (e) {
@@ -57,7 +57,7 @@ class WifiScanConnect {
     }
     print('sucess!');
     // setState(() {
-    return connectSuccess = 'Success!';
+    return connectSuccess = 'Success';
     // });
   }
 }

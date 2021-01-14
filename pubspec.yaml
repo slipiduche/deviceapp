@@ -23,16 +23,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  wifi_iot:
+    git: 
+      url: https://github.com/alternadom/WiFiFlutter.git
+      ref: 97-android-10-wifi-with-internet
+  wifi_connect: ^0.2.1
+  rxdart: ^0.25.0
+  http:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3
 
 dev_dependencies:
-  wifi_iot: ^0.2.0
-  wifi_connect: ^0.2.1
-  rxdart: ^0.25.0
+  
   flutter_test:
     sdk: flutter
 
@@ -66,6 +70,12 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+        - asset: assets/fonts/Roboto-Bold.ttf
+        - asset: assets/fonts/Roboto-Light.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:

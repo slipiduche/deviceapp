@@ -1,3 +1,4 @@
+import 'package:deviceapp/src/constants.dart';
 import 'package:flutter/material.dart';
 
 Widget homeIcon(double size, Color color) {
@@ -188,6 +189,23 @@ Widget registerIcon(double size, Color color) {
     image: AssetImage('assets/register.png'),
     width: size,
     height: size,
+  );
+}
+
+Widget statusIcon(double size, int status) {
+  LinearGradient _gradiente;
+  if (status == 1) {
+    _gradiente = gradiente;
+    print('status1');
+  } else {
+    _gradiente=gradiente1;
+    print('estatus0:$status');
+  }
+  return Container(
+    height: size,
+    width: size,
+    decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(100.0), gradient: _gradiente),
   );
 }
 
