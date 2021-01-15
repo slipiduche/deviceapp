@@ -19,9 +19,9 @@ class DevicePage1 extends StatefulWidget {
 class _DevicePageState1 extends State<DevicePage1> {
   @override
   Widget build(BuildContext context) {
-    if (globalType == 1) title = "Speaker";
-    if (globalType == 2) title = "Reader";
-    if (globalType == 3) title = "Register";
+    if (globalType == 'S') title = "Speaker";
+    if (globalType =='R') title = "Reader";
+    if (globalType == 'G') title = "Register";
 
     return SafeArea(
         child: Scaffold(
@@ -101,7 +101,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                                         fontSize: 23.0,
                                         fontWeight: FontWeight.w300),
                                     decoration: InputDecoration(
-                                hintText: "Type your WiFi name",
+                                hintText: "Type your WiFi name:$globalSsid",
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
@@ -147,7 +147,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                                   fontSize: 23.0,
                                   fontWeight: FontWeight.w300),
                               decoration: InputDecoration(
-                                hintText: "Type your WiFi password",
+                                hintText: "Type your WiFi password:$globalPassword",
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
@@ -189,7 +189,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                                   fontWeight: FontWeight.w300),
                                   
                               decoration: InputDecoration(
-                                hintText: "Name your device Ex: $title 1",
+                                hintText: "Name your device Ex: $globalDevName",
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),

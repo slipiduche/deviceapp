@@ -4,11 +4,16 @@ import 'package:deviceapp/src/provider/my-globals.dart';
 //import 'package:deviceapp/src/pages/devices_page.dart';
 import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:wifi_iot/wifi_iot.dart';
+import 'package:wifi_connect/wifi_connect.dart';
 
 class HomePage extends StatelessWidget {
+  
   const HomePage({Key key}) : super(key: key);
-
+  
   Widget build(BuildContext context) {
+    PermissionStatus _permissionGranted;
     return SafeArea(
         child: Scaffold(
             body: Container(
@@ -283,8 +288,6 @@ class HomePage extends StatelessWidget {
                     height: 50,
                     width: 150,
                     child: submitButton('START', () {
-                      globalType = 3;
-                      globalChipID = "ChipID";
                       Navigator.pushNamed(context, 'devicePage');
                     }),
                   ),

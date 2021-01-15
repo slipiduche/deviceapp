@@ -1,4 +1,7 @@
 library globals;
 
-int globalType = 0;
+String globalType;
 String globalChipID = "chipID";
+String globalDevName='';
+String globalPassword='';
+String globalSsid='';

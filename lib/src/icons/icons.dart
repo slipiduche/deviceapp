@@ -209,14 +209,14 @@ Widget statusIcon(double size, int status) {
   );
 }
 
-Widget selectIcon(double size, Color color, int type) {
-  if (type == 1) {
+Widget selectIcon(double size, Color color, String type) {
+  if (type == 'S') {
     return speakerIcon(size, color);
   }
-  if (type == 2) {
+  if (type == 'R') {
     return readerIcon(size, color);
   }
-  if (type == 3) {
+  if (type == 'G') {
     return registerIcon(size, color);
   }
 }

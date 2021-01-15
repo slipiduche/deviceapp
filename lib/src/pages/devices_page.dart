@@ -1,6 +1,7 @@
 import 'package:deviceapp/src/bloc/wifiData_bloc.dart';
 import 'package:deviceapp/src/icons/icons.dart';
 import 'package:deviceapp/src/models/wifiscan_models.dart';
+import 'package:deviceapp/src/provider/my-globals.dart';
 import 'package:deviceapp/src/provider/wifi_provider.dart';
 import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
@@ -81,6 +82,7 @@ class _DevicePageState extends State<DevicePage>
                   .addPostFrameCallback((_) => onAfterBuild(context));
               print('redibujando');
               if (snapshot.hasData) {
+                _timeout = false;
                 return Container(
                   child: makeDeviceList(snapshot.data, context,
                       (network, _tapcontext) {
@@ -90,6 +92,7 @@ class _DevicePageState extends State<DevicePage>
                   }),
                 );
               } else {
+                _timeout = true;
                 return Container(
                   child: Stack(
                     children: <Widget>[
@@ -129,39 +132,37 @@ class _DevicePageState extends State<DevicePage>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   // mainAxisSize: MainAxisSize.min,
                   children: [
-                    Column(crossAxisAlignment: CrossAxisAlignment.start,
+                    Expanded(
+                      child:
+                          Column(crossAxisAlignment: CrossAxisAlignment.start,
 
-                        // mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            height: 10.0,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 50.0,
-                              ),
-                              Text(
-                                _network.devName,
-                                style: TextStyle(fontSize: 25.0),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(
-                                width: 50.0,
-                              ),
-                            ],
-                          ),
-                          _passwordInput(context, 'Password', _network.password,
-                              (String password) {
-                            _passwordTyped = password;
-                            print('Password:$password');
-                          }),
-                          SizedBox(
-                            height: 5.0,
-                          ),
-                        ]),
+                              // mainAxisSize: MainAxisSize.min,
+                              children: [
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Text(
+                                  _network.devName,
+                                  style: TextStyle(fontSize: 25.0),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            _passwordInput(
+                                context, 'Password', _network.password,
+                                (String password) {
+                              _passwordTyped = password;
+                              print('Password:$password');
+                            }),
+                            SizedBox(
+                              height: 5.0,
+                            ),
+                          ]),
+                    ),
                   ],
                 ),
                 Row(
@@ -169,65 +170,47 @@ class _DevicePageState extends State<DevicePage>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     submitButton('Connect', () async {
-                      // print(_network.devName);
-                      // final _connection = await WifiDataBloc()
-                      //     .connect(context, _network.ssid, _passwordTyped);
-                      final _connected = await WiFiForIoTPlugin.isConnected();
+                      print('presiono conectar');
+                      bool _connected = await WiFiForIoTPlugin.isConnected();
+                      if (_connected) {
+                        print('desconectando');
+                        final _disconnect = await WiFiForIoTPlugin.disconnect();
+                        _connected = false;
+                      }
                       if (_connected == false) {
                         final _connection = await WiFiForIoTPlugin.connect(
                             _network.ssid,
                             password: _passwordTyped,
                             security: NetworkSecurity.WPA,
                             withInternet: true);
+                        if (_connection) {
+                          print('conectando');
+                          _connected = await WiFiForIoTPlugin.isConnected();
+                        }
                       }
-                      print('presiono conectar');
-                      // print('status:$_connection');
+
+                      updating(context, 'Connecting');
+                      await Future.delayed(Duration(seconds: 5));
+                      while (_connected == false) {
+                        _connected = await WiFiForIoTPlugin.isConnected();
+                      }
                       if (_connected) {
                         print('se conectó');
-                        await Future.delayed(Duration(seconds: 5));
+
+                        await Future.delayed(Duration(seconds: 1));
                         final response =
                             await get('http://192.168.4.1:80/getData');
                         print(response.body);
-                        // HttpClient client = HttpClient();
-                        // client
-                        //     .getUrl(Uri.parse('http://192.168.4.1/getData'))
-                        //     .then(
-                        //   (req) {
-                        //     return req.close();
-                        //   },
-                        // ).then(
-                        //   (response) {
-                        //     response.transform(utf8.decoder).listen(print);
-                        //   },
-                        // );
+                        final devParams = convert.jsonDecode(response.body);
+                        globalType = _network.devType;
+                        globalDevName = devParams['NAME'];
+                        globalSsid = devParams['SSID'];
+                        globalPassword = devParams['PASSWORD'];
+                        globalChipID = _network.devChipId;
                         Navigator.of(context).pop();
-                        var url = 'http://192.168.4.1/getData';
 
-                        // Await the http get response, then decode the json-formatted response.
-                        // var response = await http.get(url);
-                        // print(response);
-                        // if (response.statusCode == 200) {
-                        //   var jsonResponse = convert.jsonDecode(response.body);
-                        //   var itemCount = jsonResponse['totalItems'];
-                        //   print('Number of books about http: $itemCount.');
-                        // } else {
-                        //   print(
-                        //       'Request failed with status: ${response.statusCode}.');
-                        // }
+                        Navigator.of(context).pushNamed('devicePage1');
                       }
-                      // Navigator.of(dialogContext).pop();
-                      // //updating(context, 'updating');
-                      // print(upSong.toJson());
-                      // final resp = await ServerDataBloc().updateSong(upSong);
-                      // if (resp) {
-                      //   print('updated');
-                      //   Navigator.of(_updatingContext).pop();
-                      //   updated(dialogContext, 'Updated');
-                      // } else {
-                      //   print('error');
-                      //   Navigator.of(_updatingContext).pop();
-                      //   errorPopUp(dialogContext, 'Error');
-                      // }
                     }),
                   ],
                 ),
@@ -300,6 +283,12 @@ class _DevicePageState extends State<DevicePage>
                   textAlign: TextAlign.center,
                 ),
               ),
+              actions: [
+                submitButton('ok', () {
+                  scan.getNetworkList();
+                  Navigator.of(context).pop();
+                })
+              ],
             ));
         print(
             'no se pudo establecer conexión con el servidor intentar de nuevo?');
