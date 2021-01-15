@@ -3,6 +3,7 @@ import 'package:deviceapp/src/icons/icons.dart';
 import 'package:deviceapp/src/provider/my-globals.dart';
 import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import '../constants.dart';
 
 /*final deviceData =
@@ -20,7 +21,7 @@ class _DevicePageState1 extends State<DevicePage1> {
   @override
   Widget build(BuildContext context) {
     if (globalType == 'S') title = "Speaker";
-    if (globalType =='R') title = "Reader";
+    if (globalType == 'R') title = "Reader";
     if (globalType == 'G') title = "Register";
 
     return SafeArea(
@@ -94,17 +95,18 @@ class _DevicePageState1 extends State<DevicePage1> {
                                   height: 40,
                                   alignment: Alignment.center,
                                   margin: const EdgeInsets.only(
-                                      left: 08.0, right: 08.0, top:10.0),
+                                      left: 08.0, right: 08.0, top: 10.0),
                                   child: TextField(
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 23.0,
                                         fontWeight: FontWeight.w300),
                                     decoration: InputDecoration(
-                                hintText: "Type your WiFi name:$globalSsid",
-                                enabledBorder: InputBorder.none,
-                                focusedBorder: InputBorder.none,
-                              ),
+                                      hintText:
+                                          "Type your WiFi name:$globalSsid",
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                    ),
                                   ),
                                 )),
                           ])),
@@ -120,11 +122,10 @@ class _DevicePageState1 extends State<DevicePage1> {
                         alignment: Alignment.topLeft,
                         child: Text('Password',
                             style: TextStyle(
-                                color: colorVN,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.w300,
-                                )
-                                ),
+                              color: colorVN,
+                              fontSize: 25.0,
+                              fontWeight: FontWeight.w300,
+                            )),
                       ),
                       SizedBox(
                         height: 10.00,
@@ -139,15 +140,16 @@ class _DevicePageState1 extends State<DevicePage1> {
                           child: Container(
                             height: 40,
                             alignment: Alignment.center,
-                            margin:
-                                const EdgeInsets.only(left: 08.0, right: 08.0, top: 10.0),
+                            margin: const EdgeInsets.only(
+                                left: 08.0, right: 08.0, top: 10.0),
                             child: TextField(
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 23.0,
                                   fontWeight: FontWeight.w300),
                               decoration: InputDecoration(
-                                hintText: "Type your WiFi password:$globalPassword",
+                                hintText:
+                                    "Type your WiFi password:$globalPassword",
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
@@ -180,29 +182,28 @@ class _DevicePageState1 extends State<DevicePage1> {
                           child: Container(
                             height: 40,
                             alignment: Alignment.center,
-                            margin:
-                                const EdgeInsets.only(left: 08.0, right: 08.0, top:10),
+                            margin: const EdgeInsets.only(
+                                left: 08.0, right: 08.0, top: 10),
                             child: TextField(
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 23.0,
                                   fontWeight: FontWeight.w300),
-                                  
                               decoration: InputDecoration(
                                 hintText: "Name your device Ex: $globalDevName",
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
-                              
                             ),
                           )),
-                     
                     ])),
                 SizedBox(height: 20.0),
                 Container(
                   width: 160,
                   height: 50,
-                  child: submitButton("Done", () {}),
+                  child: submitButton("Done", () async {
+                    final response = await get('http://192.168.4.1:80/putData');
+                  }),
                 ),
               ],
             ),

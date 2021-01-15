@@ -178,11 +178,17 @@ class _DevicePageState extends State<DevicePage>
                         _connected = false;
                       }
                       if (_connected == false) {
-                        final _connection = await WiFiForIoTPlugin.connect(
+                        dynamic _connection = await WiFiForIoTPlugin.connect(
+                            _network.ssid,
+                            password: _passwordTyped,
+                            security: NetworkSecurity.WPA,
+                            withInternet: false);
+                        _connection = await WiFiForIoTPlugin.connect(
                             _network.ssid,
                             password: _passwordTyped,
                             security: NetworkSecurity.WPA,
                             withInternet: true);
+                            
                         if (_connection) {
                           print('conectando');
                           _connected = await WiFiForIoTPlugin.isConnected();
@@ -194,6 +200,7 @@ class _DevicePageState extends State<DevicePage>
                       while (_connected == false) {
                         _connected = await WiFiForIoTPlugin.isConnected();
                       }
+                      await WiFiForIoTPlugin.forceWifiUsage(true);
                       if (_connected) {
                         print('se conectó');
 
