@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:deviceapp/src/bloc/wifiData_bloc.dart';
 import 'package:deviceapp/src/icons/icons.dart';
 import 'package:deviceapp/src/models/wifiscan_models.dart';
@@ -174,18 +172,21 @@ class _DevicePageState extends State<DevicePage>
                       // print(_network.devName);
                       // final _connection = await WifiDataBloc()
                       //     .connect(context, _network.ssid, _passwordTyped);
-                      final _connection = await WiFiForIoTPlugin.connect(
-                          _network.ssid,
-                          password: _passwordTyped,
-                          security: NetworkSecurity.WPA,
-                          withInternet: true
-                          );
+                      final _connected = await WiFiForIoTPlugin.isConnected();
+                      if (_connected == false) {
+                        final _connection = await WiFiForIoTPlugin.connect(
+                            _network.ssid,
+                            password: _passwordTyped,
+                            security: NetworkSecurity.WPA,
+                            withInternet: true);
+                      }
                       print('presiono conectar');
-                      print('status:$_connection');
-                      if (_connection) {
+                      // print('status:$_connection');
+                      if (_connected) {
                         print('se conectó');
                         await Future.delayed(Duration(seconds: 5));
-                        final response = await get('http://192.168.4.1:80/getData');
+                        final response =
+                            await get('http://192.168.4.1:80/getData');
                         print(response.body);
                         // HttpClient client = HttpClient();
                         // client
