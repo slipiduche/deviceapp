@@ -9,11 +9,9 @@ import 'package:wifi_iot/wifi_iot.dart';
 import 'package:wifi_connect/wifi_connect.dart';
 
 class HomePage extends StatelessWidget {
-  
   const HomePage({Key key}) : super(key: key);
-  
+
   Widget build(BuildContext context) {
-    
     return SafeArea(
         child: Scaffold(
             body: Container(
@@ -64,8 +62,8 @@ class HomePage extends StatelessWidget {
                       fontSize: 30.0,
                       fontWeight: FontWeight.w300))),
           Container(
-            height: 350.0,
-            width: 350.0,
+            // height: 350.0,
+            // width: 350.0,
             decoration: BoxDecoration(
               color: Colors.white,
             ),
@@ -288,7 +286,7 @@ class HomePage extends StatelessWidget {
                     height: 50,
                     width: 150,
                     child: submitButton('START', () {
-                      Navigator.pushNamed(context, 'devicePage');
+                      Navigator.of(context).pushReplacementNamed('devicePage');
                     }),
                   ),
                 ],

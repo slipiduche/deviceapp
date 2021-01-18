@@ -30,17 +30,22 @@ class WifiDataBloc {
   final _listController = new BehaviorSubject<DeviceList>();
 
   final _tokenController = new BehaviorSubject<String>();
+  final timer = Stream.periodic(Duration(seconds: 10), (int count) => count);
 
   Stream<bool> get cargando => _cargandoController.stream;
+  // Stream<int> get timer => _timerController;
   Stream<DeviceList> get listStream => _listController.stream;
 
   Stream<String> get tokenStream => _tokenController.stream;
+
+  
   void getNetworkList() async {
     final list = await WifiScanConnect().scan();
     DeviceList dList = DeviceList.fromNetworkList(list);
     if (dList.list.length > 0) {
       print('filtered:${dList.list[0].devName}');
       _listController.add(dList);
+      
     }
   }
 

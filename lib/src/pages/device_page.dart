@@ -20,6 +20,7 @@ class DevicePage1 extends StatefulWidget {
 }
 
 class _DevicePageState1 extends State<DevicePage1> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController passwordController, ssidController, devNameController;
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class _DevicePageState1 extends State<DevicePage1> {
 
     return SafeArea(
         child: Scaffold(
+          key: _scaffoldKey,
       body: Container(
         color: colorBackGround,
         child: Column(children: [
@@ -221,7 +223,8 @@ class _DevicePageState1 extends State<DevicePage1> {
                   height: 50,
                   child: submitButton("Done", () async {
                     WifiDataBloc().deleteData();
-                    updating(context,
+                    //Navigator.of(context).pop();
+                    updating(_scaffoldKey.currentContext,
                         'Sending parameters the device will be restarted');
                     final response = await get(
                         'http://192.168.4.1:80/putData?NAME=$globalDevName&PASSWORD=$globalPassword&SSID=$globalSsid');
@@ -229,17 +232,19 @@ class _DevicePageState1 extends State<DevicePage1> {
 
                     if (jsonresponse["MESSAGE"] == "SUCCESS") {
                       await Future.delayed(Duration(seconds: 1));
-                      Navigator.of(context).pop();
-                      updated(context, 'Sended, changes will be visible in at less 1 minute', (context) {
+                      Navigator.of(updatingContext).pop();
+                      updated(_scaffoldKey.currentContext, 'Sended, changes will be visible in at less 1 minute', (context) {
                         WifiDataBloc().deleteData();
-                        Navigator.of(context).pushReplacementNamed('devicePage');
+                        //Navigator.of(updatedContext).pop();
+                        Navigator.pushReplacementNamed(_scaffoldKey.currentContext,'devicePage');
                       });
                     } else {
                       await Future.delayed(Duration(seconds: 1));
-                      Navigator.of(context).pop();
-                      errorPopUp(context, 'Error try again', (context) {
+                      Navigator.of(updatingContext).pop();
+                      errorPopUp(_scaffoldKey.currentContext, 'Error try again', (context) {
                         WifiDataBloc().deleteData();
-                        Navigator.of(context).pushReplacementNamed('devicePage');
+                        //Navigator.of(errorContext).pop();
+                        Navigator.of(_scaffoldKey.currentContext).pushReplacementNamed('devicePage');
                       });
                     }
                   }),

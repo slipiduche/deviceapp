@@ -1,6 +1,7 @@
 import 'package:deviceapp/src/constants.dart';
 import 'package:deviceapp/src/icons/icons.dart';
 import 'package:deviceapp/src/models/wifiscan_models.dart';
+import 'package:deviceapp/src/provider/my-globals.dart';
 import 'package:flutter/material.dart';
 
 int awaitUpload = 0;
@@ -109,12 +110,12 @@ Widget tarjeta(
   );
 }
 void updating(BuildContext _context, String message) {
-    BuildContext _updatingContext;
+    
     showDialog(
         context: _context,
         barrierDismissible: false,
         builder: (_context) {
-          _updatingContext = _context;
+          updatingContext = _context;
           return AlertDialog(
             content: Container(
               height: 100.0,
@@ -142,6 +143,7 @@ void updating(BuildContext _context, String message) {
         barrierDismissible: true,
         builder: (context) {
           dialogContext = _context;
+          updatedContext = _context;
           return AlertDialog(
             content: Container(
               height: 100.0,
@@ -164,6 +166,7 @@ void updating(BuildContext _context, String message) {
               Container(
                 child: Center(
                   child: submitButton('OK', () {
+                    Navigator.of(context).pop();
                     function(dialogContext);
                   }),
                 ),
@@ -175,7 +178,7 @@ void updating(BuildContext _context, String message) {
 
   void errorPopUp(BuildContext _context, String message,
       void Function(BuildContext fcontext) function) {
-    BuildContext errorContext;
+    //BuildContext errorContext;
     showDialog(
         context: _context,
         barrierDismissible: false,
@@ -205,6 +208,7 @@ void updating(BuildContext _context, String message) {
                   Expanded(
                     child: Center(
                       child: submitButton('OK', () {
+                        Navigator.of(context).pop();
                         function(errorContext);
                       }),
                     ),

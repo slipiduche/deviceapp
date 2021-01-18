@@ -57,6 +57,19 @@ class DeviceList {
               element.ssid.substring(2, 3) == 'S')) {
                 print('filtering:${element.ssid.substring(15)}');
         list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
+        list.add(WifiDevice.fromMap(element));
       }
     });
   }

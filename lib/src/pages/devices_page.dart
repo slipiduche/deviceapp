@@ -38,8 +38,7 @@ class _DevicePageState extends State<DevicePage>
     scan.getNetworkList();
     return SafeArea(
         child: Scaffold(
-            body: SingleChildScrollView(
-      child: Container(
+      body: Container(
         color: colorBackGround,
         child: Column(children: [
           Container(
@@ -71,49 +70,58 @@ class _DevicePageState extends State<DevicePage>
           Text('Select a device to configure',
               style: TextStyle(
                   color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
-          SizedBox(
-            height: 10.0,
-          ),
           StreamBuilder(
-            stream: scan.listStream,
-            builder:
-                (BuildContext context, AsyncSnapshot<DeviceList> snapshot) {
-              WidgetsBinding.instance
-                  .addPostFrameCallback((_) => onAfterBuild(context));
-              print('redibujando');
-              if (snapshot.hasData) {
-                _timeout = false;
-                return Container(
-                  child: makeDeviceList(snapshot.data, context,
-                      (network, _tapcontext) {
-                    print(network.ssid);
-                    print(network.devType);
-                    showConnect(context, network);
-                  }),
+              stream: scan.timer,
+              builder: (context, snapshot) {
+                scan.getNetworkList();
+                return SizedBox(
+                  height: 10.0,
                 );
-              } else {
-                WifiDataBloc().getNetworkList();
-                _timeout = true;
-                return Container(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: 40.0,
-                        width: 40.0,
-                        child: CircularProgressIndicator(
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(colorMedico),
-                        ),
+              }),
+          Expanded(
+            child: Container(
+              child: StreamBuilder(
+                stream: scan.listStream,
+                builder:
+                    (BuildContext context, AsyncSnapshot<DeviceList> snapshot) {
+                  WidgetsBinding.instance
+                      .addPostFrameCallback((_) => onAfterBuild(context));
+                  print('redibujando');
+                  if (snapshot.hasData) {
+                    _timeout = false;
+                    return Container(
+                      child: makeDeviceList(snapshot.data, context,
+                          (network, _tapcontext) {
+                        print(network.ssid);
+                        print(network.devType);
+                        showConnect(context, network);
+                      }),
+                    );
+                  } else {
+                    WifiDataBloc().getNetworkList();
+                    _timeout = true;
+                    return Container(
+                      child: Stack(
+                        children: <Widget>[
+                          Container(
+                            height: 40.0,
+                            width: 40.0,
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(colorMedico),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                );
-              }
-            },
+                    );
+                  }
+                },
+              ),
+            ),
           ),
         ]),
       ),
-    )));
+    ));
   }
 
   void showConnect(BuildContext _context, WifiDevice _network) {
@@ -195,7 +203,7 @@ class _DevicePageState extends State<DevicePage>
                           _connected = await WiFiForIoTPlugin.isConnected();
                         }
                       }
-
+                      Navigator.of(context).pop();
                       updating(context, 'Connecting');
                       await Future.delayed(Duration(seconds: 5));
                       while (_connected == false) {
@@ -215,7 +223,7 @@ class _DevicePageState extends State<DevicePage>
                         globalSsid = devParams['SSID'];
                         globalPassword = devParams['PASSWORD'];
                         globalChipID = _network.devChipId;
-                        Navigator.of(context).pop();
+                        Navigator.of(updatingContext).pop();
 
                         Navigator.of(context).pushNamed('devicePage1');
                       }
@@ -275,14 +283,11 @@ class _DevicePageState extends State<DevicePage>
   }
 
   onAfterBuild(BuildContext context) async {
-    dynamic _actualizar =  Future.delayed(Duration(seconds: 15), () {
-      WifiDataBloc().getNetworkList();
-    });
-    dynamic _sinConexion =  Future.delayed(Duration(seconds: 7), () {
+    dynamic _sinConexion = Future.delayed(Duration(seconds: 7), () {
       if (_timeout) {
         final _error = true;
         // Navigator.pop(context);
-
+        _timeout = false;
         showDialog(
             context: context,
             child: AlertDialog(
