@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'package:deviceapp/src/bloc/wifiData_bloc.dart';
 import 'package:deviceapp/src/icons/icons.dart';
 
 import 'package:deviceapp/src/provider/my-globals.dart';
@@ -18,11 +20,15 @@ class DevicePage1 extends StatefulWidget {
 }
 
 class _DevicePageState1 extends State<DevicePage1> {
+  TextEditingController passwordController, ssidController, devNameController;
   @override
   Widget build(BuildContext context) {
     if (globalType == 'S') title = "Speaker";
     if (globalType == 'R') title = "Reader";
     if (globalType == 'G') title = "Register";
+    passwordController = TextEditingController(text: globalPassword);
+    ssidController = TextEditingController(text: globalSsid);
+    devNameController = TextEditingController(text: globalDevName);
 
     return SafeArea(
         child: Scaffold(
@@ -97,6 +103,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                                   margin: const EdgeInsets.only(
                                       left: 08.0, right: 08.0, top: 10.0),
                                   child: TextField(
+                                    controller: ssidController,
                                     style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 23.0,
@@ -107,6 +114,9 @@ class _DevicePageState1 extends State<DevicePage1> {
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: InputBorder.none,
                                     ),
+                                    onChanged: (value) {
+                                      globalSsid = value;
+                                    },
                                   ),
                                 )),
                           ])),
@@ -143,6 +153,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                             margin: const EdgeInsets.only(
                                 left: 08.0, right: 08.0, top: 10.0),
                             child: TextField(
+                              controller: passwordController,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 23.0,
@@ -153,6 +164,9 @@ class _DevicePageState1 extends State<DevicePage1> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
+                              onChanged: (value) {
+                                globalPassword = value;
+                              },
                             ),
                           )),
                     ])),
@@ -185,6 +199,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                             margin: const EdgeInsets.only(
                                 left: 08.0, right: 08.0, top: 10),
                             child: TextField(
+                              controller: devNameController,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 23.0,
@@ -194,6 +209,9 @@ class _DevicePageState1 extends State<DevicePage1> {
                                 enabledBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
                               ),
+                              onChanged: (value) {
+                                globalDevName = value;
+                              },
                             ),
                           )),
                     ])),
@@ -202,7 +220,28 @@ class _DevicePageState1 extends State<DevicePage1> {
                   width: 160,
                   height: 50,
                   child: submitButton("Done", () async {
-                    final response = await get('http://192.168.4.1:80/putData');
+                    WifiDataBloc().deleteData();
+                    updating(context,
+                        'Sending parameters the device will be restarted');
+                    final response = await get(
+                        'http://192.168.4.1:80/putData?NAME=$globalDevName&PASSWORD=$globalPassword&SSID=$globalSsid');
+                    final jsonresponse = jsonDecode(response.body);
+
+                    if (jsonresponse["MESSAGE"] == "SUCCESS") {
+                      await Future.delayed(Duration(seconds: 1));
+                      Navigator.of(context).pop();
+                      updated(context, 'Sended, changes will be visible in at less 1 minute', (context) {
+                        WifiDataBloc().deleteData();
+                        Navigator.of(context).pushReplacementNamed('devicePage');
+                      });
+                    } else {
+                      await Future.delayed(Duration(seconds: 1));
+                      Navigator.of(context).pop();
+                      errorPopUp(context, 'Error try again', (context) {
+                        WifiDataBloc().deleteData();
+                        Navigator.of(context).pushReplacementNamed('devicePage');
+                      });
+                    }
                   }),
                 ),
               ],

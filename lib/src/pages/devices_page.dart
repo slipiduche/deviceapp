@@ -92,6 +92,7 @@ class _DevicePageState extends State<DevicePage>
                   }),
                 );
               } else {
+                WifiDataBloc().getNetworkList();
                 _timeout = true;
                 return Container(
                   child: Stack(
@@ -188,7 +189,7 @@ class _DevicePageState extends State<DevicePage>
                             password: _passwordTyped,
                             security: NetworkSecurity.WPA,
                             withInternet: true);
-                            
+
                         if (_connection) {
                           print('conectando');
                           _connected = await WiFiForIoTPlugin.isConnected();
@@ -274,7 +275,10 @@ class _DevicePageState extends State<DevicePage>
   }
 
   onAfterBuild(BuildContext context) async {
-    dynamic _sinConexion = await Future.delayed(Duration(seconds: 7), () {
+    dynamic _actualizar =  Future.delayed(Duration(seconds: 15), () {
+      WifiDataBloc().getNetworkList();
+    });
+    dynamic _sinConexion =  Future.delayed(Duration(seconds: 7), () {
       if (_timeout) {
         final _error = true;
         // Navigator.pop(context);
