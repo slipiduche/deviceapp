@@ -71,13 +71,27 @@ class _DevicePageState extends State<DevicePage> {
           StreamBuilder(
               stream: scan.timer,
               builder: (context, snapshot) {
-                if (!connecting) {
-                  if (changing) {
-                    scan.deleteData();
-                  }
-                  scan.getNetworkList();
-                }
+                if (snapshot.hasData) {
+                  timeout2++;
+                  if (!connecting) {
+                    if ((timeout2 > 1) && (errorClosed) && _timeout) {
+                      // Navigator.pop(context);
+                      //errorClosed = false;
+                      //_timeout = false;
+                      if (timeout2 > 3) {
+                        timeout2 = 0;
+                      }
+                      timeout2 = 0;
 
+                      if (changing) {
+                        scan.deleteData();
+                      }
+                      scan.getNetworkList();
+                    }
+                  } else {}
+                }
+                WidgetsBinding.instance
+                    .addPostFrameCallback((_) => onAfterBuild(context));
                 return SizedBox(
                   height: 10.0,
                 );
@@ -88,8 +102,8 @@ class _DevicePageState extends State<DevicePage> {
                 stream: scan.listStream,
                 builder:
                     (BuildContext context, AsyncSnapshot<DeviceList> snapshot) {
-                  WidgetsBinding.instance
-                      .addPostFrameCallback((_) => onAfterBuild(context));
+                  // WidgetsBinding.instance
+                  //     .addPostFrameCallback((_) => onAfterBuild(context));
                   print('redibujando');
                   if (snapshot.hasData) {
                     _timeout = false;
@@ -224,16 +238,17 @@ class _DevicePageState extends State<DevicePage> {
                           print('conectando');
                           _connected = await WiFiForIoTPlugin.isConnected();
                         }
-                      }
+                      } //
                       Navigator.of(context).pop();
                       updating(context, 'Connecting');
                       await Future.delayed(Duration(seconds: 5));
-                      while (_connected == false) {
+                      while ((_connected == false) && (timeout2 < 2)) {
                         _connected = await WiFiForIoTPlugin.isConnected();
                       }
+                      timeout2 = 0;
                       await WiFiForIoTPlugin.forceWifiUsage(true);
                       if (_connected) {
-                        print('se conectó');
+                        print('se conectó'); //
 
                         await Future.delayed(Duration(seconds: 1));
                         final response =
@@ -329,39 +344,41 @@ class _DevicePageState extends State<DevicePage> {
     //   enabled = await WiFiForIoTPlugin.isEnabled();
     //   print('habilitando wifi');
     // }
-    dynamic _sinConexion = Future.delayed(Duration(seconds: 7), () {
-      if (_timeout) {
-        final _error = true;
-        // Navigator.pop(context);
-        _timeout = false;
-        showDialog(
-            context: context,
-            child: AlertDialog(
-              elevation: 5.0,
-              title: Center(child: Text('Error')),
-              content: Container(
-                child: Text(
-                  "Devices unavailable,make sure wifi and location services are active and try again.",
-                  textAlign: TextAlign.center,
-                ),
+    // dynamic _sinConexion = Future.delayed(Duration(seconds: 7), () {
+    if (_timeout&&errorClosed) {
+      final _error = true;
+      // Navigator.pop(context);
+      //_timeout = false;
+      errorClosed=false;
+      showDialog(
+          context: context,
+          child: AlertDialog(
+            elevation: 5.0,
+            title: Center(child: Text('Error')),
+            content: Container(
+              child: Text(
+                "Devices unavailable,make sure wifi and location services are active and try again.",
+                textAlign: TextAlign.center,
               ),
-              actions: [
-                submitButton('ok', () {
-                  scan.getNetworkList();
-                  Navigator.of(context).pop();
-                })
-              ],
-            ));
-        print(
-            'no se pudo establecer conexión con el servidor intentar de nuevo?');
+            ),
+            actions: [
+              submitButton('ok', () {
+                errorClosed=true;
+                scan.getNetworkList();
+                Navigator.of(context).pop();
+              })
+            ],
+          ));
+      print(
+          'no se pudo establecer conexión con el servidor intentar de nuevo?');
 
-        return _error;
-      } else {
-        print('Sigue...');
-        final _error = false;
-        return _error;
-      }
-    });
+      return _error;
+    } else {
+      print('Sigue...');
+      final _error = false;
+      return _error;
+    }
+
     // if (_ruta==0) {
     //    setState(() {
 
