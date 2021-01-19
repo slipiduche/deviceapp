@@ -23,18 +23,23 @@ void _moveTo(index, context) async {
 }
 
 Widget submitButton(text, void Function() function) {
-  return RaisedButton(
-      child: Text(
-        text,
-        style: TextStyle(
-            fontSize: 30, color: Colors.white, fontWeight: FontWeight.w500),
-      ),
-      shape: RoundedRectangleBorder(
+  return GestureDetector(
+      onTap: function,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 5.0),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+                fontSize: 30, color: Colors.white, fontWeight: FontWeight.w500),
+          ),
+        ),
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          side: BorderSide(color: colorMedico)),
-      elevation: 4.0,
-      color: colorMedico,
-      onPressed: function);
+          color: colorMedico,
+          boxShadow: [boxShadow1],
+        ),
+      ));
 }
 
 Widget tarjeta(
@@ -117,8 +122,9 @@ void updating(BuildContext _context, String message) {
       builder: (_context) {
         updatingContext = _context;
         return AlertDialog(
+          scrollable: true,
           content: Container(
-            height: 100.0,
+            //height: 100.0,
             child: Column(
               children: <Widget>[
                 CircularProgressIndicator(
@@ -126,6 +132,7 @@ void updating(BuildContext _context, String message) {
                 ),
                 Text(
                   '$message...',
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20.0),
                 )
               ],
@@ -145,8 +152,9 @@ void updated(BuildContext _context, String message,
         dialogContext = _context;
         updatedContext = _context;
         return AlertDialog(
+          scrollable: true,
           content: Container(
-            height: 100.0,
+            //height: 140.0,
             child: Column(
               children: <Widget>[
                 Icon(
@@ -156,22 +164,19 @@ void updated(BuildContext _context, String message,
                 ),
                 Text(
                   message,
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20.0),
-                )
-              ],
-            ),
-          ),
-          actionsPadding: EdgeInsets.symmetric(horizontal: 100.0),
-          actions: <Widget>[
-            Container(
-              child: Center(
-                child: submitButton('OK', () {
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                submitButton('OK', () {
                   Navigator.of(context).pop();
                   function(dialogContext);
                 }),
-              ),
+              ],
             ),
-          ],
+          ),
         );
       });
 }
@@ -181,12 +186,13 @@ void errorPopUp(BuildContext _context, String message,
   //BuildContext errorContext;
   showDialog(
       context: _context,
-      barrierDismissible: true,
+      barrierDismissible: false,
       builder: (context) {
         errorContext = _context;
         return AlertDialog(
+          scrollable: true,
           content: Container(
-            height: 100.0,
+           //height: 182.0,
             child: Column(
               children: <Widget>[
                 Icon(
@@ -196,22 +202,19 @@ void errorPopUp(BuildContext _context, String message,
                 ),
                 Text(
                   message,
+                  textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 20.0),
-                )
-              ],
-            ),
-          ),
-          actionsPadding: EdgeInsets.symmetric(horizontal: 100.0),
-          actions: <Widget>[
-            Container(
-              child: Center(
-                child: submitButton('OK', () {
+                ),
+                SizedBox(
+                  height: 5.0,
+                ),
+                submitButton('OK', () {
                   Navigator.of(context).pop();
                   function(errorContext);
                 }),
-              ),
+              ],
             ),
-          ],
+          ),
         );
       });
 }

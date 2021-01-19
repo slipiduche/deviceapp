@@ -28,8 +28,11 @@ class _DevicePageState extends State<DevicePage> {
   String _passwordTyped;
   WifiDataBloc scan = WifiDataBloc();
   ScrollController _scrollController = new ScrollController();
+  bool _closeError = false;
+  bool _connectDialog = false;
   @override
   void initState() {
+    errorClosed = true;
     super.initState();
   }
 
@@ -37,7 +40,7 @@ class _DevicePageState extends State<DevicePage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          key: _scaffoldKey,
+      key: _scaffoldKey,
       body: Container(
         color: colorBackGround,
         child: Column(children: [
@@ -74,7 +77,9 @@ class _DevicePageState extends State<DevicePage> {
               stream: scan.timer,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  scan.deleteData();
                   timeout2++;
+                  firstTime = true;
                   if (!connecting) {
                     if ((timeout2 > 1) && (errorClosed) && _timeout) {
                       // Navigator.pop(context);
@@ -108,6 +113,9 @@ class _DevicePageState extends State<DevicePage> {
                   //     .addPostFrameCallback((_) => onAfterBuild(context));
                   print('redibujando');
                   if (snapshot.hasData) {
+                    if (!errorClosed) {
+                      _closeError = true;
+                    }
                     _timeout = false;
                     return Container(
                       child: RefreshIndicator(
@@ -158,139 +166,149 @@ class _DevicePageState extends State<DevicePage> {
   }
 
   void showConnect(BuildContext _context, WifiDevice _network) {
+    _connectDialog = true;
     showDialog(
+        barrierDismissible: false,
         context: context,
-        child: AlertDialog(
-          elevation: 5.0,
-          title: Center(child: Text('Connect to device')),
-          content: Container(
-            margin: EdgeInsets.symmetric(horizontal: 10.0),
-            height: MediaQuery.of(context).size.height - 500,
-            width: MediaQuery.of(context).size.width - 50,
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Expanded(
-                      child:
-                          Column(crossAxisAlignment: CrossAxisAlignment.start,
+        child: WillPopScope(
+          onWillPop: () {
+            _connectDialog = false;
+            Navigator.of(_context).pop();
+          },
+          child: AlertDialog(
+            elevation: 5.0,
+            title: Center(child: Text('Connect to device')),
+            content: Container(
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
+              height: MediaQuery.of(context).size.height - 500,
+              width: MediaQuery.of(context).size.width - 50,
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child:
+                            Column(crossAxisAlignment: CrossAxisAlignment.start,
 
-                              // mainAxisSize: MainAxisSize.min,
-                              children: [
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _network.devName,
-                                  style: TextStyle(fontSize: 25.0),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                            _passwordInput(
-                                context, 'Password', _network.password,
-                                (String password) {
-                              _passwordTyped = password;
-                              print('Password:$password');
-                            }),
-                            SizedBox(
-                              height: 5.0,
-                            ),
-                          ]),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    submitButton('Connect', () async {
-                      connecting = true;
-                      print('presiono conectar');
-                      final wifi = await WiFiForIoTPlugin.isEnabled();
-                      if (!wifi) {
-                        WiFiForIoTPlugin.setEnabled(true);
-                        print('encender wifi');
-                      }
-                      bool _connected = await WiFiForIoTPlugin.isConnected();
-                      if (_connected) {
-                        print('desconectando');
-                        final _disconnect = await WiFiForIoTPlugin.disconnect();
-                        _connected = false;
-                      }
-                      if (_connected == false) {
-                        dynamic _connection = await WiFiForIoTPlugin.connect(
-                            _network.ssid,
-                            password: _passwordTyped,
-                            security: NetworkSecurity.WPA,
-                            withInternet: false);
-                        _connection = await WiFiForIoTPlugin.connect(
-                            _network.ssid,
-                            password: _passwordTyped,
-                            security: NetworkSecurity.WPA,
-                            withInternet: true);
+                                // mainAxisSize: MainAxisSize.min,
+                                children: [
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    _network.devName,
+                                    style: TextStyle(fontSize: 25.0),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              _passwordInput(
+                                  context, 'Password', _network.password,
+                                  (String password) {
+                                _passwordTyped = password;
+                                print('Password:$password');
+                              }),
+                              SizedBox(
+                                height: 5.0,
+                              ),
+                            ]),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      submitButton('Connect', () async {
+                        _connectDialog = false;
+                        connecting = true;
+                        print('presiono conectar');
+                        final wifi = await WiFiForIoTPlugin.isEnabled();
+                        if (!wifi) {
+                          WiFiForIoTPlugin.setEnabled(true);
+                          print('encender wifi');
+                        }
+                        bool _connected = await WiFiForIoTPlugin.isConnected();
+                        if (_connected) {
+                          print('desconectando');
+                          final _disconnect =
+                              await WiFiForIoTPlugin.disconnect();
+                          _connected = false;
+                        }
+                        if (_connected == false) {
+                          dynamic _connection = await WiFiForIoTPlugin.connect(
+                              _network.ssid,
+                              password: _passwordTyped,
+                              security: NetworkSecurity.WPA,
+                              withInternet: false);
+                          _connection = await WiFiForIoTPlugin.connect(
+                              _network.ssid,
+                              password: _passwordTyped,
+                              security: NetworkSecurity.WPA,
+                              withInternet: true);
 
-                        if (_connection) {
-                          print('conectando');
+                          if (_connection) {
+                            print('conectando');
+                            _connected = await WiFiForIoTPlugin.isConnected();
+                          }
+                        } //
+                        Navigator.of(context).pop();
+                        updating(context, 'Connecting');
+                        await Future.delayed(Duration(seconds: 5));
+                        while ((_connected == false) && (timeout2 < 2)) {
                           _connected = await WiFiForIoTPlugin.isConnected();
                         }
-                      } //
-                      Navigator.of(context).pop();
-                      updating(context, 'Connecting');
-                      await Future.delayed(Duration(seconds: 5));
-                      while ((_connected == false) && (timeout2 < 2)) {
-                        _connected = await WiFiForIoTPlugin.isConnected();
-                      }
-                      timeout2 = 0;
+                        timeout2 = 0;
 
-                      if (_connected) {
-                        print('se conectó'); //
-                        await WiFiForIoTPlugin.forceWifiUsage(true);
-                        print('forzo wifi');
-                        await Future.delayed(Duration(seconds: 1));
-                        final response =
-                            await get('http://192.168.4.1:80/getData');
-                        print(response.body);
-                        final devParams = convert.jsonDecode(response.body);
-                        if (devParams['NAME'] == null ||
-                            devParams['NAME'] == '') {
-                          errorPopUp(context, 'Device not responding error.',
-                              (context) {
+                        if (_connected) {
+                          print('se conectó'); //
+                          await WiFiForIoTPlugin.forceWifiUsage(true);
+                          print('forzo wifi');
+                          await Future.delayed(Duration(seconds: 1));
+                          final response =
+                              await get('http://192.168.4.1:80/getData');
+                          print(response.body);
+                          final devParams = convert.jsonDecode(response.body);
+                          if (devParams['NAME'] == null ||
+                              devParams['NAME'] == '') {
+                            errorPopUp(context, 'Device not responding error.',
+                                (context) {
+                              connecting = false;
+                              changing = false;
+                              Navigator.of(errorContext).pop();
+                            });
+                          } else {
+                            globalType = _network.devType;
+                            globalDevName = devParams['NAME'];
+                            globalSsid = devParams['SSID'];
+                            globalPassword = devParams['PASSWORD'];
+                            globalChipID = _network.devChipId;
+                            connecting = false;
+                            Navigator.of(updatingContext).pop();
+
+                            Navigator.of(context).pushNamed('devicePage1');
+                          }
+                        } else {
+                          Navigator.of(updatingContext).pop();
+                          errorPopUp(_scaffoldKey.currentContext,
+                              'Device not connected', (context) {
                             connecting = false;
                             changing = false;
-                            Navigator.of(errorContext).pop();
+                            //Navigator.of(errorContext).pop();
                           });
-                        } else {
-                          globalType = _network.devType;
-                          globalDevName = devParams['NAME'];
-                          globalSsid = devParams['SSID'];
-                          globalPassword = devParams['PASSWORD'];
-                          globalChipID = _network.devChipId;
-                          connecting = false;
-                          Navigator.of(updatingContext).pop();
-
-                          Navigator.of(context).pushNamed('devicePage1');
                         }
-                      } else {
-
-                        Navigator.of(updatingContext).pop();
-                        errorPopUp(_scaffoldKey.currentContext, 'Device not connected', (context) {
-                          connecting = false;
-                          changing = false;
-                          //Navigator.of(errorContext).pop();
-                        });
-                      }
-                    }),
-                  ],
-                ),
-              ],
+                      }),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ));
@@ -351,30 +369,42 @@ class _DevicePageState extends State<DevicePage> {
     //   print('habilitando wifi');
     // }
     // dynamic _sinConexion = Future.delayed(Duration(seconds: 7), () {
-    if (_timeout && errorClosed) {
+    if (_closeError&&!_connectDialog) {
+      errorClosed = true;
+      _closeError = false;
+      Navigator.of(errorContext).pop();
+    }
+    if (_timeout && errorClosed && firstTime&&!_connectDialog) {
       final _error = true;
       // Navigator.pop(context);
       //_timeout = false;
       errorClosed = false;
-      showDialog(
-          context: context,
-          child: AlertDialog(
-            elevation: 5.0,
-            title: Center(child: Text('Error')),
-            content: Container(
-              child: Text(
-                "Devices unavailable,make sure wifi and location services are active and try again.",
-                textAlign: TextAlign.center,
-              ),
-            ),
-            actions: [
-              submitButton('ok', () {
-                errorClosed = true;
-                scan.getNetworkList();
-                Navigator.of(context).pop();
-              })
-            ],
-          ));
+      errorPopUp(context,
+          'Devices unavailable, make sure wifi and location services are active and try again.',
+          (context) {
+        errorClosed = true;
+        scan.getNetworkList();
+        //Navigator.of(context).pop();
+      });
+      // showDialog(
+      //     context: context,
+      //     child: AlertDialog(
+      //       elevation: 5.0,
+      //       title: Center(child: Text('Error')),
+      //       content: Container(
+      //         child: Text(
+      //           "Devices unavailable,make sure wifi and location services are active and try again.",
+      //           textAlign: TextAlign.center,
+      //         ),
+      //       ),
+      //       actions: [
+      //         submitButton('ok', () {
+      //           errorClosed = true;
+      //           scan.getNetworkList();
+      //           Navigator.of(context).pop();
+      //         })
+      //       ],
+      //     ));
       print(
           'no se pudo establecer conexión con el servidor intentar de nuevo?');
 
