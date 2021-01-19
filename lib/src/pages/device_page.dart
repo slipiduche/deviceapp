@@ -219,7 +219,7 @@ class _DevicePageState1 extends State<DevicePage1> {
                     ])),
                 SizedBox(height: 20.0),
                 Container(
-                  width: 160,
+                  //width: 160,
                   height: 50,
                   child: submitButton("Done", () async {
                     WifiDataBloc().deleteData();
