@@ -473,7 +473,7 @@ Widget makeDeviceList(ScrollController _scrollController,DeviceList devices, Bui
     void _function(WifiDevice network, BuildContext _context)) {
   BuildContext listContext = _context;
   return ListView.builder(
-      controller: _scrollController,
+      //controller: _scrollController,
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: (devices.list.length),

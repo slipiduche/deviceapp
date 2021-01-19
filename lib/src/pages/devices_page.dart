@@ -109,6 +109,7 @@ class _DevicePageState extends State<DevicePage> {
                     _timeout = false;
                     return Container(
                       child: RefreshIndicator(
+                        displacement: 60.0,
                         color: colorMedico,
                         onRefresh: () async {
                           if (!connecting) {
