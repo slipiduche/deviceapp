@@ -5,7 +5,7 @@ import 'package:deviceapp/src/provider/my-globals.dart';
 import 'package:deviceapp/src/provider/wifi_provider.dart';
 import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:wifi_connect/wifi_connect.dart';
+
 import 'package:wifi_iot/wifi_iot.dart';
 //import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -23,19 +23,20 @@ class DevicePage extends StatefulWidget {
   _DevicePageState createState() => _DevicePageState();
 }
 
-class _DevicePageState extends State<DevicePage>
-    with WifiScannerMixin<DevicePage> {
+class _DevicePageState extends State<DevicePage> {
   String _passwordTyped;
   WifiDataBloc scan = WifiDataBloc();
+  ScrollController _scrollController = new ScrollController();
   @override
   void initState() {
     super.initState();
-    startWifiScanner();
+    _scrollController.addListener(() {
+      if (_scrollController.position == 0) {}
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    scan.getNetworkList();
     return SafeArea(
         child: Scaffold(
       body: Container(
@@ -73,7 +74,13 @@ class _DevicePageState extends State<DevicePage>
           StreamBuilder(
               stream: scan.timer,
               builder: (context, snapshot) {
-                scan.getNetworkList();
+                if (!connecting) {
+                  if (changing) {
+                    scan.deleteData();
+                  }
+                  scan.getNetworkList();
+                }
+
                 return SizedBox(
                   height: 10.0,
                 );
@@ -90,12 +97,24 @@ class _DevicePageState extends State<DevicePage>
                   if (snapshot.hasData) {
                     _timeout = false;
                     return Container(
-                      child: makeDeviceList(snapshot.data, context,
-                          (network, _tapcontext) {
-                        print(network.ssid);
-                        print(network.devType);
-                        showConnect(context, network);
-                      }),
+                      child: RefreshIndicator(
+                        color: colorMedico,
+                        onRefresh: () async {
+                          if (!connecting) {
+                            if (changing) {
+                              scan.deleteData();
+                            }
+                            scan.getNetworkList();
+                          }
+                        },
+                        child: makeDeviceList(
+                            _scrollController, snapshot.data, context,
+                            (network, _tapcontext) {
+                          print(network.ssid);
+                          print(network.devType);
+                          showConnect(context, network);
+                        }),
+                      ),
                     );
                   } else {
                     WifiDataBloc().getNetworkList();
@@ -179,7 +198,13 @@ class _DevicePageState extends State<DevicePage>
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     submitButton('Connect', () async {
+                      connecting = true;
                       print('presiono conectar');
+                      final wifi = await WiFiForIoTPlugin.isEnabled();
+                      if (!wifi) {
+                        WiFiForIoTPlugin.setEnabled(true);
+                        print('encender wifi');
+                      }
                       bool _connected = await WiFiForIoTPlugin.isConnected();
                       if (_connected) {
                         print('desconectando');
@@ -223,6 +248,7 @@ class _DevicePageState extends State<DevicePage>
                         globalSsid = devParams['SSID'];
                         globalPassword = devParams['PASSWORD'];
                         globalChipID = _network.devChipId;
+                        connecting = false;
                         Navigator.of(updatingContext).pop();
 
                         Navigator.of(context).pushNamed('devicePage1');
@@ -283,6 +309,13 @@ class _DevicePageState extends State<DevicePage>
   }
 
   onAfterBuild(BuildContext context) async {
+    bool enabled = false;
+    enabled = await WiFiForIoTPlugin.isEnabled();
+    // while (!enabled) {
+    //   WiFiForIoTPlugin.setEnabled(true);
+    //   enabled = await WiFiForIoTPlugin.isEnabled();
+    //   print('habilitando wifi');
+    // }
     dynamic _sinConexion = Future.delayed(Duration(seconds: 7), () {
       if (_timeout) {
         final _error = true;

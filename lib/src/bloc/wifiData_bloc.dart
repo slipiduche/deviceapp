@@ -7,7 +7,8 @@ import 'package:flutter/services.dart';
 
 import 'package:rxdart/rxdart.dart';
 import 'dart:io' show Platform;
-import 'package:wifi_connect/wifi_connect.dart';
+
+import 'package:wifi_iot/wifi_iot.dart';
 
 class WifiDataBloc {
   dispose() {
@@ -24,13 +25,15 @@ class WifiDataBloc {
     return _singleton;
   }
 
-  WifiDataBloc._internal() {}
+  WifiDataBloc._internal() {
+    timer = Stream.periodic(Duration(seconds: 7), (int count) => count);
+  }
 
   final _cargandoController = new BehaviorSubject<bool>();
   final _listController = new BehaviorSubject<DeviceList>();
 
   final _tokenController = new BehaviorSubject<String>();
-  final timer = Stream.periodic(Duration(seconds: 10), (int count) => count);
+  Stream<int> timer = new BehaviorSubject<int>();
 
   Stream<bool> get cargando => _cargandoController.stream;
   // Stream<int> get timer => _timerController;
@@ -38,23 +41,16 @@ class WifiDataBloc {
 
   Stream<String> get tokenStream => _tokenController.stream;
 
-  
   void getNetworkList() async {
     final list = await WifiScanConnect().scan();
     DeviceList dList = DeviceList.fromNetworkList(list);
     if (dList.list.length > 0) {
       print('filtered:${dList.list[0].devName}');
       _listController.add(dList);
-      
     }
   }
 
-  Future<String> connect(
-      BuildContext context, String _ssid, String _password) async {
-    final _connection =
-        await WifiScanConnect().connect(context, _ssid, _password);
-    return _connection;
-  }
+  
 
   void deleteData() {
     _listController.add(null);

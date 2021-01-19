@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:io' show Platform;
-import 'package:wifi_connect/wifi_connect.dart';
+
 
 class WifiScanConnect {
   /////
@@ -36,28 +36,5 @@ class WifiScanConnect {
     // });
   }
 
-  Future<String> connect(BuildContext context, _ssid, _password) async {
-    // setState(() {
-    //   connectSuccess = '...';
-    // });
-    try {
-      await WifiConnect.connect(
-        context,
-        ssid: _ssid,
-        password: _password,
-        hidden: false,
-        securityType: hidden ? SecurityType.wpa : SecurityType.auto,
-      );
-    } on WifiConnectException catch (e) {
-      print('error: $e');
-      // setState(() {
-      connectSuccess = e.status.toString();
-      // });
-      return connectSuccess;
-    }
-    print('sucess!');
-    // setState(() {
-    return connectSuccess = 'Success';
-    // });
-  }
+  
 }

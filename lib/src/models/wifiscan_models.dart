@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:io' show Platform;
-import 'package:wifi_connect/wifi_connect.dart';
+
 
 class WifiDevice {
   WifiDevice(

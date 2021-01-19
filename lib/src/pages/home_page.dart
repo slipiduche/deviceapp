@@ -6,12 +6,12 @@ import 'package:deviceapp/src/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import 'package:wifi_iot/wifi_iot.dart';
-import 'package:wifi_connect/wifi_connect.dart';
+
 
 class HomePage extends StatelessWidget {
   const HomePage({Key key}) : super(key: key);
 
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context)  {
     return SafeArea(
         child: Scaffold(
             body: Container(

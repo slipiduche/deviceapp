@@ -469,11 +469,11 @@ class _BottomBarState extends State<BottomBar> {
   }
 }
 
-Widget makeDeviceList(DeviceList devices, BuildContext _context,
+Widget makeDeviceList(ScrollController _scrollController,DeviceList devices, BuildContext _context,
     void _function(WifiDevice network, BuildContext _context)) {
   BuildContext listContext = _context;
   return ListView.builder(
-      //controller: _scrollController,
+      controller: _scrollController,
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
       itemCount: (devices.list.length),

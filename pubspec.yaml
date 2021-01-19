@@ -27,7 +27,7 @@ dependencies:
     git: 
       url: https://github.com/alternadom/WiFiFlutter.git
       ref: 97-android-10-wifi-with-internet
-  wifi_connect: ^0.2.1
+  #wifi_connect: ^0.2.1
   rxdart: ^0.25.0
   http:
 

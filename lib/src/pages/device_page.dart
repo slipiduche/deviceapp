@@ -235,16 +235,22 @@ class _DevicePageState1 extends State<DevicePage1> {
                       Navigator.of(updatingContext).pop();
                       updated(_scaffoldKey.currentContext, 'Sended, changes will be visible in at less 1 minute', (context) {
                         WifiDataBloc().deleteData();
-                        //Navigator.of(updatedContext).pop();
-                        Navigator.pushReplacementNamed(_scaffoldKey.currentContext,'devicePage');
+                        connecting=false;
+                        changing=true;
+                        Navigator.of(_scaffoldKey.currentContext).pop();
+                        WifiDataBloc().getNetworkList();
+                        //Navigator.pushReplacementNamed(_scaffoldKey.currentContext,'devicePage');
                       });
                     } else {
                       await Future.delayed(Duration(seconds: 1));
                       Navigator.of(updatingContext).pop();
                       errorPopUp(_scaffoldKey.currentContext, 'Error try again', (context) {
                         WifiDataBloc().deleteData();
-                        //Navigator.of(errorContext).pop();
-                        Navigator.of(_scaffoldKey.currentContext).pushReplacementNamed('devicePage');
+                        connecting=false;
+                        changing=true;
+                        Navigator.of(_scaffoldKey.currentContext).pop();
+                        WifiDataBloc().getNetworkList();
+                        //Navigator.of(_scaffoldKey.currentContext).pushReplacementNamed('devicePage');
                       });
                     }
                   }),
