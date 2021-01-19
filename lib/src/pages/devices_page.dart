@@ -30,7 +30,6 @@ class _DevicePageState extends State<DevicePage> {
   @override
   void initState() {
     super.initState();
-    
   }
 
   @override
@@ -241,15 +240,31 @@ class _DevicePageState extends State<DevicePage> {
                             await get('http://192.168.4.1:80/getData');
                         print(response.body);
                         final devParams = convert.jsonDecode(response.body);
-                        globalType = _network.devType;
-                        globalDevName = devParams['NAME'];
-                        globalSsid = devParams['SSID'];
-                        globalPassword = devParams['PASSWORD'];
-                        globalChipID = _network.devChipId;
-                        connecting = false;
-                        Navigator.of(updatingContext).pop();
+                        if (devParams['NAME'] == null ||
+                            devParams['NAME'] == '') {
+                          errorPopUp(context, 'Device not responding error.',
+                              (context) {
+                            connecting = false;
+                            changing = false;
+                            Navigator.of(errorContext).pop();
+                          });
+                        } else {
+                          globalType = _network.devType;
+                          globalDevName = devParams['NAME'];
+                          globalSsid = devParams['SSID'];
+                          globalPassword = devParams['PASSWORD'];
+                          globalChipID = _network.devChipId;
+                          connecting = false;
+                          Navigator.of(updatingContext).pop();
 
-                        Navigator.of(context).pushNamed('devicePage1');
+                          Navigator.of(context).pushNamed('devicePage1');
+                        }
+                      } else {
+                        errorPopUp(context, 'Device not connected', (context) {
+                          connecting = false;
+                          changing = false;
+                          Navigator.of(errorContext).pop();
+                        });
                       }
                     }),
                   ],
@@ -326,7 +341,7 @@ class _DevicePageState extends State<DevicePage> {
               title: Center(child: Text('Error')),
               content: Container(
                 child: Text(
-                  "Devices unavailable, try again?.",
+                  "Devices unavailable,make sure wifi and location services are active and try again.",
                   textAlign: TextAlign.center,
                 ),
               ),

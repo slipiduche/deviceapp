@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:wifi_iot/wifi_iot.dart';
 import 'dart:io' show Platform;
 
-
 class WifiDevice {
   WifiDevice(
       {this.ssid,
@@ -55,20 +54,7 @@ class DeviceList {
           (element.ssid.substring(2, 3) == 'G' ||
               element.ssid.substring(2, 3) == 'R' ||
               element.ssid.substring(2, 3) == 'S')) {
-                print('filtering:${element.ssid.substring(15)}');
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
-        list.add(WifiDevice.fromMap(element));
+        print('filtering:${element.ssid.substring(15)}');
         list.add(WifiDevice.fromMap(element));
       }
     });

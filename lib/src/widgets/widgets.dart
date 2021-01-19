@@ -468,7 +468,7 @@ class _BottomBarState extends State<BottomBar> {
     }
   }
 }
-
+////
 Widget makeDeviceList(ScrollController _scrollController,DeviceList devices, BuildContext _context,
     void _function(WifiDevice network, BuildContext _context)) {
   BuildContext listContext = _context;
