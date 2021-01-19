@@ -30,9 +30,7 @@ class _DevicePageState extends State<DevicePage> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.position == 0) {}
-    });
+    
   }
 
   @override
