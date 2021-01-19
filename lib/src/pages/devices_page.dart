@@ -24,6 +24,7 @@ class DevicePage extends StatefulWidget {
 }
 
 class _DevicePageState extends State<DevicePage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String _passwordTyped;
   WifiDataBloc scan = WifiDataBloc();
   ScrollController _scrollController = new ScrollController();
@@ -36,6 +37,7 @@ class _DevicePageState extends State<DevicePage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          key: _scaffoldKey,
       body: Container(
         color: colorBackGround,
         child: Column(children: [
@@ -247,10 +249,11 @@ class _DevicePageState extends State<DevicePage> {
                         _connected = await WiFiForIoTPlugin.isConnected();
                       }
                       timeout2 = 0;
-                      await WiFiForIoTPlugin.forceWifiUsage(true);
+
                       if (_connected) {
                         print('se conectó'); //
-
+                        await WiFiForIoTPlugin.forceWifiUsage(true);
+                        print('forzo wifi');
                         await Future.delayed(Duration(seconds: 1));
                         final response =
                             await get('http://192.168.4.1:80/getData');
@@ -276,10 +279,12 @@ class _DevicePageState extends State<DevicePage> {
                           Navigator.of(context).pushNamed('devicePage1');
                         }
                       } else {
-                        errorPopUp(context, 'Device not connected', (context) {
+
+                        Navigator.of(updatingContext).pop();
+                        errorPopUp(_scaffoldKey.currentContext, 'Device not connected', (context) {
                           connecting = false;
                           changing = false;
-                          Navigator.of(errorContext).pop();
+                          //Navigator.of(errorContext).pop();
                         });
                       }
                     }),
@@ -346,11 +351,11 @@ class _DevicePageState extends State<DevicePage> {
     //   print('habilitando wifi');
     // }
     // dynamic _sinConexion = Future.delayed(Duration(seconds: 7), () {
-    if (_timeout&&errorClosed) {
+    if (_timeout && errorClosed) {
       final _error = true;
       // Navigator.pop(context);
       //_timeout = false;
-      errorClosed=false;
+      errorClosed = false;
       showDialog(
           context: context,
           child: AlertDialog(
@@ -364,7 +369,7 @@ class _DevicePageState extends State<DevicePage> {
             ),
             actions: [
               submitButton('ok', () {
-                errorClosed=true;
+                errorClosed = true;
                 scan.getNetworkList();
                 Navigator.of(context).pop();
               })

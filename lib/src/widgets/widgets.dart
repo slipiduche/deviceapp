@@ -109,116 +109,112 @@ Widget tarjeta(
     },
   );
 }
+
 void updating(BuildContext _context, String message) {
-    
-    showDialog(
-        context: _context,
-        barrierDismissible: false,
-        builder: (_context) {
-          updatingContext = _context;
-          return AlertDialog(
-            content: Container(
-              height: 100.0,
-              child: Column(
-                children: <Widget>[
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(colorMedico),
-                  ),
-                  Text(
-                    '$message...',
-                    style: TextStyle(fontSize: 20.0),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  void updated(BuildContext _context, String message,
-      void Function(BuildContext fcontext) function) {
-    BuildContext dialogContext;
-    showDialog(
-        context: _context,
-        barrierDismissible: true,
-        builder: (context) {
-          dialogContext = _context;
-          updatedContext = _context;
-          return AlertDialog(
-            content: Container(
-              height: 100.0,
-              child: Column(
-                children: <Widget>[
-                  Icon(
-                    Icons.check,
-                    size: 50.0,
-                    color: colorMedico,
-                  ),
-                  Text(
-                    message,
-                    style: TextStyle(fontSize: 20.0),
-                  )
-                ],
-              ),
-            ),
-            actionsPadding: EdgeInsets.symmetric(horizontal: 100.0),
-            actions: <Widget>[
-              Container(
-                child: Center(
-                  child: submitButton('OK', () {
-                    Navigator.of(context).pop();
-                    function(dialogContext);
-                  }),
+  showDialog(
+      context: _context,
+      barrierDismissible: false,
+      builder: (_context) {
+        updatingContext = _context;
+        return AlertDialog(
+          content: Container(
+            height: 100.0,
+            child: Column(
+              children: <Widget>[
+                CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(colorMedico),
                 ),
-              ),
-            ],
-          );
-        });
-  }
+                Text(
+                  '$message...',
+                  style: TextStyle(fontSize: 20.0),
+                )
+              ],
+            ),
+          ),
+        );
+      });
+}
 
-  void errorPopUp(BuildContext _context, String message,
-      void Function(BuildContext fcontext) function) {
-    //BuildContext errorContext;
-    showDialog(
-        context: _context,
-        barrierDismissible: false,
-        builder: (context) {
-          errorContext = _context;
-          return AlertDialog(
-            content: Container(
-              height: 100.0,
-              child: Column(
-                children: <Widget>[
-                  Icon(
-                    Icons.error_outline,
-                    size: 50.0,
-                    color: Colors.red,
-                  ),
-                  Text(
-                    message,
-                    style: TextStyle(fontSize: 20.0),
-                  )
-                ],
+void updated(BuildContext _context, String message,
+    void Function(BuildContext fcontext) function) {
+  BuildContext dialogContext;
+  showDialog(
+      context: _context,
+      barrierDismissible: true,
+      builder: (context) {
+        dialogContext = _context;
+        updatedContext = _context;
+        return AlertDialog(
+          content: Container(
+            height: 100.0,
+            child: Column(
+              children: <Widget>[
+                Icon(
+                  Icons.check,
+                  size: 50.0,
+                  color: colorMedico,
+                ),
+                Text(
+                  message,
+                  style: TextStyle(fontSize: 20.0),
+                )
+              ],
+            ),
+          ),
+          actionsPadding: EdgeInsets.symmetric(horizontal: 100.0),
+          actions: <Widget>[
+            Container(
+              child: Center(
+                child: submitButton('OK', () {
+                  Navigator.of(context).pop();
+                  function(dialogContext);
+                }),
               ),
             ),
-            actionsPadding: EdgeInsets.symmetric(horizontal: 100.0),
-            actions: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: submitButton('OK', () {
-                        Navigator.of(context).pop();
-                        function(errorContext);
-                      }),
-                    ),
-                  ),
-                ],
+          ],
+        );
+      });
+}
+
+void errorPopUp(BuildContext _context, String message,
+    void Function(BuildContext fcontext) function) {
+  //BuildContext errorContext;
+  showDialog(
+      context: _context,
+      barrierDismissible: true,
+      builder: (context) {
+        errorContext = _context;
+        return AlertDialog(
+          content: Container(
+            height: 100.0,
+            child: Column(
+              children: <Widget>[
+                Icon(
+                  Icons.error_outline,
+                  size: 50.0,
+                  color: Colors.red,
+                ),
+                Text(
+                  message,
+                  style: TextStyle(fontSize: 20.0),
+                )
+              ],
+            ),
+          ),
+          actionsPadding: EdgeInsets.symmetric(horizontal: 100.0),
+          actions: <Widget>[
+            Container(
+              child: Center(
+                child: submitButton('OK', () {
+                  Navigator.of(context).pop();
+                  function(errorContext);
+                }),
               ),
-            ],
-          );
-        });
-  }
+            ),
+          ],
+        );
+      });
+}
 
 class TwoIconCard extends StatefulWidget {
   @override
@@ -277,8 +273,6 @@ class _TwoIconCardState extends State<TwoIconCard> {
       ));
     }
   }
-
-  
 
   Widget twoIconCard(String label, description, Widget icon, dynamic icon1,
       String path, dynamic context, String name) {
@@ -468,8 +462,12 @@ class _BottomBarState extends State<BottomBar> {
     }
   }
 }
+
 ////
-Widget makeDeviceList(ScrollController _scrollController,DeviceList devices, BuildContext _context,
+Widget makeDeviceList(
+    ScrollController _scrollController,
+    DeviceList devices,
+    BuildContext _context,
     void _function(WifiDevice network, BuildContext _context)) {
   BuildContext listContext = _context;
   return ListView.builder(
