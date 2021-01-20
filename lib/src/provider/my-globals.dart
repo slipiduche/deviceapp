@@ -12,6 +12,7 @@ BuildContext updatedContext;
 BuildContext errorContext;
 bool connecting = false;
 bool changing=false;
+bool editing=false;
 int timeout2=0;
 bool errorClosed=true;
 bool firstTime=false;

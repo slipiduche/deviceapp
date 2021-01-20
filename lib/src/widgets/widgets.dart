@@ -31,7 +31,7 @@ Widget submitButton(text, void Function() function) {
           child: Text(
             text,
             style: TextStyle(
-                fontSize: 30, color: Colors.white, fontWeight: FontWeight.w500),
+                fontSize: 20, color: Colors.white, fontWeight: FontWeight.w400),
           ),
         ),
         decoration: BoxDecoration(
@@ -170,10 +170,13 @@ void updated(BuildContext _context, String message,
                 SizedBox(
                   height: 5.0,
                 ),
-                submitButton('OK', () {
-                  Navigator.of(context).pop();
-                  function(dialogContext);
-                }),
+                Container(
+                  height: 50,
+                  child: submitButton('OK', () {
+                    Navigator.of(context).pop();
+                    function(dialogContext);
+                  }),
+                ),
               ],
             ),
           ),
@@ -192,7 +195,7 @@ void errorPopUp(BuildContext _context, String message,
         return AlertDialog(
           scrollable: true,
           content: Container(
-           //height: 182.0,
+            //height: 182.0,
             child: Column(
               children: <Widget>[
                 Icon(
@@ -208,10 +211,13 @@ void errorPopUp(BuildContext _context, String message,
                 SizedBox(
                   height: 5.0,
                 ),
-                submitButton('OK', () {
-                  Navigator.of(context).pop();
-                  function(errorContext);
-                }),
+                Container(
+                  height: 50.0,
+                  child: submitButton('OK', () {
+                    Navigator.of(context).pop();
+                    function(errorContext);
+                  }),
+                ),
               ],
             ),
           ),
@@ -535,44 +541,51 @@ Widget deviceCard(WifiDevice device, Widget typeIcon, String status,
           child: Container(
               margin: EdgeInsets.symmetric(horizontal: 20.0),
               child: Row(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(child: Container()),
-                    typeIcon,
-                    Expanded(child: Container()),
-                    Container(
-                      width: MediaQuery.of(context).size.width - 180,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Row(
+                        //crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            device.devName,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 24.0,
-                              fontWeight: FontWeight.w500,
+                          SizedBox(width: 5.0,),
+                          typeIcon,
+                          SizedBox(width: 10.0,),
+                          Expanded(
+                            //width: MediaQuery.of(context).size.width - 180,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  device.devName,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  'Type: ' + devType,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w100),
+                                ),
+                                Text(
+                                  'ChipId: ' + device.devChipId,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w100),
+                                ),
+                              ],
                             ),
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            'Type: ' + devType,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w100),
-                          ),
-                          Text(
-                            'ChipId: ' + device.devChipId,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w100),
-                          ),
-                        ],
-                      ),
-                    ),
-                    statusIcon(60.0, int.parse(device.devStatus)),
-                    Expanded(child: Container()),
-                  ]))));
+                          SizedBox(width: 10.0,),
+                          statusIcon(60.0, int.parse(device.devStatus)),
+                          SizedBox(width: 5.0,),
+                        ]),
+                  ),
+                ],
+              ))));
 }

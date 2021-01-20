@@ -78,14 +78,17 @@ class _DevicePageState extends State<DevicePage> {
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   scan.deleteData();
-                  timeout2++;
+
                   firstTime = true;
+                  if (connecting) {
+                    timeout2++;
+                  }
                   if (!connecting) {
                     if ((timeout2 > 1) && (errorClosed) && _timeout) {
                       // Navigator.pop(context);
                       //errorClosed = false;
                       //_timeout = false;
-                      if (timeout2 > 3) {
+                      if (timeout2 > 11) {
                         timeout2 = 0;
                       }
                       timeout2 = 0;
@@ -176,11 +179,12 @@ class _DevicePageState extends State<DevicePage> {
             Navigator.of(_context).pop();
           },
           child: AlertDialog(
+            scrollable: true,
             elevation: 5.0,
             title: Center(child: Text('Connect to device')),
             content: Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0),
-              height: MediaQuery.of(context).size.height - 500,
+              //height: MediaQuery.of(context).size.height - 500,
               width: MediaQuery.of(context).size.width - 50,
               child: Column(
                 children: <Widget>[
@@ -227,87 +231,92 @@ class _DevicePageState extends State<DevicePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: submitButton('Connect', () async {
-                          _connectDialog = false;
-                          connecting = true;
-                          print('presiono conectar');
-                          final wifi = await WiFiForIoTPlugin.isEnabled();
-                          if (!wifi) {
-                            WiFiForIoTPlugin.setEnabled(true);
-                            print('encender wifi');
-                          }
-                          bool _connected =
-                              await WiFiForIoTPlugin.isConnected();
-                          if (_connected) {
-                            print('desconectando');
-                            final _disconnect =
-                                await WiFiForIoTPlugin.disconnect();
-                            _connected = false;
-                          }
-                          if (_connected == false) {
-                            dynamic _connection =
-                                await WiFiForIoTPlugin.connect(_network.ssid,
-                                    password: _passwordTyped,
-                                    security: NetworkSecurity.WPA,
-                                    withInternet: false);
-                            _connection = await WiFiForIoTPlugin.connect(
-                                _network.ssid,
-                                password: _passwordTyped,
-                                security: NetworkSecurity.WPA,
-                                withInternet: true);
+                        child: Container(
+                          height: 50.0,
+                          child: submitButton('Connect', () async {
+                            _connectDialog = false;
+                            connecting = true;
+                            print('presiono conectar');
+                            final wifi = await WiFiForIoTPlugin.isEnabled();
+                            if (!wifi) {
+                              WiFiForIoTPlugin.setEnabled(true);
+                              print('encender wifi');
+                            }
+                            bool _connected =
+                                await WiFiForIoTPlugin.isConnected();
+                            if (_connected) {
+                              print('desconectando');
+                              final _disconnect =
+                                  await WiFiForIoTPlugin.disconnect();
+                              _connected = false;
+                            }
+                            if (_connected == false) {
+                              dynamic _connection =
+                                  await WiFiForIoTPlugin.connect(_network.ssid,
+                                      password: _passwordTyped,
+                                      security: NetworkSecurity.WPA,
+                                      withInternet: false);
+                              _connection = await WiFiForIoTPlugin.connect(
+                                  _network.ssid,
+                                  password: _passwordTyped,
+                                  security: NetworkSecurity.WPA,
+                                  withInternet: true);
 
-                            if (_connection) {
-                              print('conectando');
+                              if (_connection) {
+                                print('conectando');
+                                _connected =
+                                    await WiFiForIoTPlugin.isConnected();
+                              }
+                            } //
+                            Navigator.of(context).pop();
+                            updating(context, 'Connecting');
+                            await Future.delayed(Duration(seconds: 5));
+                            while ((_connected == false) && (timeout2 < 10)) {
                               _connected = await WiFiForIoTPlugin.isConnected();
                             }
-                          } //
-                          Navigator.of(context).pop();
-                          updating(context, 'Connecting');
-                          await Future.delayed(Duration(seconds: 5));
-                          while ((_connected == false) && (timeout2 < 2)) {
-                            _connected = await WiFiForIoTPlugin.isConnected();
-                          }
-                          timeout2 = 0;
+                            timeout2 = 0;
 
-                          if (_connected) {
-                            print('se conectó'); //
-                            await WiFiForIoTPlugin.forceWifiUsage(true);
-                            print('forzo wifi');
-                            await Future.delayed(Duration(seconds: 1));
-                            final response =
-                                await get('http://192.168.4.1:80/getData');
-                            print(response.body);
-                            final devParams = convert.jsonDecode(response.body);
-                            if (devParams['NAME'] == null ||
-                                devParams['NAME'] == '') {
-                              errorPopUp(
-                                  context, 'Device not responding error.',
-                                  (context) {
+                            if (_connected) {
+                              print('se conectó'); //
+                              await WiFiForIoTPlugin.forceWifiUsage(true);
+                              print('forzo wifi');
+                              await Future.delayed(Duration(seconds: 1));
+                              final response =
+                                  await get('http://192.168.4.1:80/getData');
+                              print(response.body);
+                              final devParams =
+                                  convert.jsonDecode(response.body);
+                              if (devParams['NAME'] == null ||
+                                  devParams['NAME'] == '') {
+                                errorPopUp(
+                                    context, 'Device not responding error.',
+                                    (context) {
+                                  connecting = false;
+                                  changing = false;
+                                  Navigator.of(errorContext).pop();
+                                });
+                              } else {
+                                globalType = _network.devType;
+                                globalDevName = devParams['NAME'];
+                                globalSsid = devParams['SSID'];
+                                globalPassword = devParams['PASSWORD'];
+                                globalChipID = _network.devChipId;
+                                connecting = false;
+                                Navigator.of(updatingContext).pop();
+
+                                Navigator.of(context).pushNamed('devicePage1');
+                              }
+                            } else {
+                              Navigator.of(updatingContext).pop();
+                              errorPopUp(_scaffoldKey.currentContext,
+                                  'Device not connected', (context) {
                                 connecting = false;
                                 changing = false;
-                                Navigator.of(errorContext).pop();
+                                //Navigator.of(errorContext).pop();
                               });
-                            } else {
-                              globalType = _network.devType;
-                              globalDevName = devParams['NAME'];
-                              globalSsid = devParams['SSID'];
-                              globalPassword = devParams['PASSWORD'];
-                              globalChipID = _network.devChipId;
-                              connecting = false;
-                              Navigator.of(updatingContext).pop();
-
-                              Navigator.of(context).pushNamed('devicePage1');
                             }
-                          } else {
-                            Navigator.of(updatingContext).pop();
-                            errorPopUp(_scaffoldKey.currentContext,
-                                'Device not connected', (context) {
-                              connecting = false;
-                              changing = false;
-                              //Navigator.of(errorContext).pop();
-                            });
-                          }
-                        }),
+                          }),
+                        ),
                       ),
                     ],
                   ),
@@ -378,7 +387,13 @@ class _DevicePageState extends State<DevicePage> {
       _closeError = false;
       Navigator.of(errorContext).pop();
     }
-    if (_timeout && errorClosed && firstTime && !_connectDialog) {
+    if (_timeout &&
+        errorClosed &&
+        firstTime &&
+        !_connectDialog &&
+        !connecting &&
+        !changing &&
+        !editing) {
       final _error = true;
       // Navigator.pop(context);
       //_timeout = false;
