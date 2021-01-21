@@ -26,14 +26,15 @@ class WifiDataBloc {
   }
 
   WifiDataBloc._internal() {
-    timer = Stream.periodic(Duration(seconds: 7), (int count) => count);
+    // timer = Stream.periodic(Duration(seconds: 7), (int count) => count);
   }
 
   final _cargandoController = new BehaviorSubject<bool>();
   final _listController = new BehaviorSubject<DeviceList>();
 
   final _tokenController = new BehaviorSubject<String>();
-  Stream<int> timer = new BehaviorSubject<int>();
+  //Stream<int> timer = new BehaviorSubject<int>();
+  final timer = Stream.periodic(Duration(seconds: 7), (int count) => count).asBroadcastStream();
 
   Stream<bool> get cargando => _cargandoController.stream;
   // Stream<int> get timer => _timerController;
@@ -49,8 +50,6 @@ class WifiDataBloc {
       _listController.add(dList);
     }
   }
-
-  
 
   void deleteData() {
     _listController.add(null);

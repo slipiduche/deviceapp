@@ -22,6 +22,13 @@ class DevicePage1 extends StatefulWidget {
 class _DevicePageState1 extends State<DevicePage1> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   TextEditingController passwordController, ssidController, devNameController;
+  WifiDataBloc scan = WifiDataBloc();
+  @override
+  void dispose() {
+    //scan.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     editing = true;
@@ -33,67 +40,127 @@ class _DevicePageState1 extends State<DevicePage1> {
     devNameController = TextEditingController(text: globalDevName);
 
     return SafeArea(
-        child: Scaffold(
-      key: _scaffoldKey,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              color: colorBackGround,
-              child: Column(children: [
-                Container(
-                    height: 10.0,
-                    width: double.infinity,
+        child: WillPopScope(
+      onWillPop: () {},
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                color: colorBackGround,
+                child: Column(children: [
+                  Container(
+                      height: 10.0,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: gradiente,
+                      )),
+                  SizedBox(height: 26.0),
+                  Container(
+                    height: 123,
+                    width: 123,
                     decoration: BoxDecoration(
-                      gradient: gradiente,
-                    )),
-                SizedBox(height: 26.0),
-                Container(
-                  height: 123,
-                  width: 123,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100.00)),
-                  child: selectIcon(98.0, colorMedico, globalType),
-                ),
-                SizedBox(
-                  height: 8.0,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(
-                      color: colorVN,
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.w400),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text('Wifi Network',
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(100.00)),
+                    child: selectIcon(98.0, colorMedico, globalType),
+                  ),
+                  SizedBox(
+                    height: 8.0,
+                  ),
+                  Text(
+                    title,
                     style: TextStyle(
                         color: colorVN,
-                        fontSize: 25.0,
-                        fontWeight: FontWeight.w300)),
-                SizedBox(
-                  height: 10.0,
-                ),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        child: Column(
-                          children: [
-                            Container(
-                                // height: 100,
-                                // width: 360,
-                                child: Column(children: [
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.w400),
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  Text('Wifi Network',
+                      style: TextStyle(
+                          color: colorVN,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.w300)),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          child: Column(
+                            children: [
+                              Container(
+                                  margin:
+                                      EdgeInsets.symmetric(horizontal: 20.0),
+                                  // height: 100,
+                                  // width: 360,
+                                  child: Column(children: [
+                                    Container(
+                                      alignment: Alignment.topLeft,
+                                      child: Text('Name',
+                                          style: TextStyle(
+                                              color: colorVN,
+                                              fontSize: 25.0,
+                                              fontWeight: FontWeight.w300)),
+                                    ),
+                                    SizedBox(
+                                      height: 10.00,
+                                    ),
+                                    Container(
+                                        alignment: Alignment.topLeft,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(08.00),
+                                          border: Border.all(
+                                              width: 1, color: Colors.black26),
+                                        ),
+                                        child: Container(
+                                          height: 40,
+                                          alignment: Alignment.center,
+                                          margin: const EdgeInsets.only(
+                                              left: 08.0,
+                                              right: 08.0,
+                                              top: 10.0),
+                                          child: TextField(
+                                            controller: ssidController,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 23.0,
+                                                fontWeight: FontWeight.w300),
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  "Type your WiFi name:$globalSsid",
+                                              enabledBorder: InputBorder.none,
+                                              focusedBorder: InputBorder.none,
+                                            ),
+                                            onChanged: (value) {
+                                              editing = true;
+                                              globalSsid = value;
+                                            },
+                                          ),
+                                        )),
+                                  ])),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 10.00),
+                        Container(
+                            margin: EdgeInsets.symmetric(horizontal: 20.0),
+                            // height: 100,
+                            // width: 360,
+                            child: Column(children: [
                               Container(
                                 alignment: Alignment.topLeft,
-                                child: Text('Name',
+                                child: Text('Password',
                                     style: TextStyle(
-                                        color: colorVN,
-                                        fontSize: 25.0,
-                                        fontWeight: FontWeight.w300)),
+                                      color: colorVN,
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.w300,
+                                    )),
                               ),
                               SizedBox(
                                 height: 10.00,
@@ -112,192 +179,150 @@ class _DevicePageState1 extends State<DevicePage1> {
                                     margin: const EdgeInsets.only(
                                         left: 08.0, right: 08.0, top: 10.0),
                                     child: TextField(
-                                      controller: ssidController,
+                                      controller: passwordController,
                                       style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 23.0,
                                           fontWeight: FontWeight.w300),
                                       decoration: InputDecoration(
                                         hintText:
-                                            "Type your WiFi name:$globalSsid",
+                                            "Type your WiFi password:$globalPassword",
                                         enabledBorder: InputBorder.none,
                                         focusedBorder: InputBorder.none,
                                       ),
                                       onChanged: (value) {
                                         editing = true;
-                                        globalSsid = value;
+                                        globalPassword = value;
                                       },
                                     ),
                                   )),
                             ])),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 10.00),
-                      Container(
-                          // height: 100,
-                          // width: 360,
-                          child: Column(children: [
+                        SizedBox(height: 10.00),
                         Container(
-                          alignment: Alignment.topLeft,
-                          child: Text('Password',
-                              style: TextStyle(
-                                color: colorVN,
-                                fontSize: 25.0,
-                                fontWeight: FontWeight.w300,
-                              )),
-                        ),
-                        SizedBox(
-                          height: 10.00,
-                        ),
-                        Container(
-                            alignment: Alignment.topLeft,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(08.00),
-                              border:
-                                  Border.all(width: 1, color: Colors.black26),
-                            ),
-                            child: Container(
-                              height: 40,
-                              alignment: Alignment.center,
-                              margin: const EdgeInsets.only(
-                                  left: 08.0, right: 08.0, top: 10.0),
-                              child: TextField(
-                                controller: passwordController,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 23.0,
-                                    fontWeight: FontWeight.w300),
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "Type your WiFi password:$globalPassword",
-                                  enabledBorder: InputBorder.none,
-                                  focusedBorder: InputBorder.none,
-                                ),
-                                onChanged: (value) {
-                                  editing = true;
-                                  globalPassword = value;
-                                },
-                              ),
-                            )),
-                      ])),
-                      SizedBox(height: 10.00),
-                      Container(
-                        child: Container(
-                            // height: 100,
-                            // width: 360,
-                            child: Column(children: [
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text('Device Name',
-                                style: TextStyle(
-                                    color: colorVN,
-                                    fontSize: 25.0,
-                                    fontWeight: FontWeight.w300)),
-                          ),
-                          SizedBox(
-                            height: 10.00,
-                          ),
-                          Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Container(
+                              // height: 100,
+                              // width: 360,
+                              child: Column(children: [
+                            Container(
                               alignment: Alignment.topLeft,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(08.00),
-                                border:
-                                    Border.all(width: 1, color: Colors.black26),
-                              ),
-                              child: Container(
-                                height: 40,
-                                alignment: Alignment.center,
-                                margin: const EdgeInsets.only(
-                                    left: 08.0, right: 08.0, top: 10),
-                                child: TextField(
-                                  controller: devNameController,
+                              child: Text('Device Name',
                                   style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 23.0,
-                                      fontWeight: FontWeight.w300),
-                                  decoration: InputDecoration(
-                                    hintText:
-                                        "Name your device Ex: $globalDevName",
-                                    enabledBorder: InputBorder.none,
-                                    focusedBorder: InputBorder.none,
-                                  ),
-                                  onChanged: (value) {
-                                    editing = true;
-                                    globalDevName = value;
-                                  },
+                                      color: colorVN,
+                                      fontSize: 25.0,
+                                      fontWeight: FontWeight.w300)),
+                            ),
+                            SizedBox(
+                              height: 10.00,
+                            ),
+                            Container(
+                                alignment: Alignment.topLeft,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(08.00),
+                                  border: Border.all(
+                                      width: 1, color: Colors.black26),
                                 ),
-                              )),
-                        ])),
-                      ),
-                      SizedBox(height: 20.0),
-                      Container(
-                        //width: 160,
-                        // margin:
-                        //     const EdgeInsets.only(left: 08.0, right: 08.0, top: 10),
-                        height: 50,
-                        child: submitButton("Done", () async {
-                          editing = false;
-                          WifiDataBloc().deleteData();
-                          //Navigator.of(context).pop();
-                          updating(_scaffoldKey.currentContext,
-                              'Sending parameters the device will be restarted');
-                          try {
-                            final response = await get(
-                                'http://192.168.4.1:80/putData?NAME=$globalDevName&PASSWORD=$globalPassword&SSID=$globalSsid');
-                            final jsonresponse = jsonDecode(response.body);
+                                child: Container(
+                                  height: 40,
+                                  alignment: Alignment.center,
+                                  margin: const EdgeInsets.only(
+                                      left: 08.0, right: 08.0, top: 10),
+                                  child: TextField(
+                                    controller: devNameController,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 23.0,
+                                        fontWeight: FontWeight.w300),
+                                    decoration: InputDecoration(
+                                      hintText:
+                                          "Name your device Ex: $globalDevName",
+                                      enabledBorder: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                    ),
+                                    onChanged: (value) {
+                                      editing = true;
+                                      globalDevName = value;
+                                    },
+                                  ),
+                                )),
+                          ])),
+                        ),
+                        SizedBox(height: 20.0),
+                        Container(
+                          margin: EdgeInsets.symmetric(horizontal: 20.0),
+                          //width: 160,
+                          // margin:
+                          //     const EdgeInsets.only(left: 08.0, right: 08.0, top: 10),
+                          height: 50,
+                          child: submitButton("Done", () async {
+                            editing = false;
+                            //WifiDataBloc().deleteData();
+                            //Navigator.of(context).pop();
+                            updating(_scaffoldKey.currentContext,
+                                'Sending parameters the device will be restarted');
+                            try {
+                              final response = await get(
+                                  'http://192.168.4.1:80/putData?NAME=$globalDevName&PASSWORD=$globalPassword&SSID=$globalSsid');
+                              final jsonresponse = jsonDecode(response.body);
 
-                            if (jsonresponse["MESSAGE"] == "SUCCESS") {
-                              await Future.delayed(Duration(seconds: 1));
-                              Navigator.of(updatingContext).pop();
-                              updated(_scaffoldKey.currentContext,
-                                  'Sended, changes will be visible in at less 1 minute',
-                                  (context) {
-                                WifiDataBloc().deleteData();
-                                connecting = false;
-                                changing = true;
-                                Navigator.of(_scaffoldKey.currentContext).pop();
-                                WifiDataBloc().getNetworkList();
-                                //Navigator.pushReplacementNamed(_scaffoldKey.currentContext,'devicePage');
-                              });
-                            } else {
+                              if (jsonresponse["MESSAGE"] == "SUCCESS") {
+                                await Future.delayed(Duration(seconds: 1));
+                                Navigator.of(updatingContext).pop();
+                                updated(_scaffoldKey.currentContext,
+                                    'Sended, changes will be visible in at less 1 minute',
+                                    (context) {
+                                  //WifiDataBloc().deleteData();
+                                  connecting = false;
+                                  changing = true;
+                                  // Navigator.of(_scaffoldKey.currentContext)
+                                  //     .pop();
+                                  Navigator.of(_scaffoldKey.currentContext)
+                                      .pushReplacementNamed('devicePage');
+                                  //WifiDataBloc().getNetworkList();
+                                  //Navigator.pushReplacementNamed(_scaffoldKey.currentContext,'devicePage');
+                                });
+                              } else {
+                                await Future.delayed(Duration(seconds: 1));
+                                Navigator.of(updatingContext).pop();
+                                errorPopUp(_scaffoldKey.currentContext,
+                                    'Error try again', (context) {
+                                  //WifiDataBloc().deleteData();
+                                  connecting = false;
+                                  changing = true;
+                                  Navigator.of(_scaffoldKey.currentContext)
+                                      .pushReplacementNamed('devicePage');
+                                  // Navigator.of(_scaffoldKey.currentContext)
+                                  //     .pop();
+                                  //WifiDataBloc().getNetworkList();
+                                  //Navigator.of(_scaffoldKey.currentContext).pushReplacementNamed('devicePage');
+                                });
+                              }
+                            } catch (e) {
+                              print('esto pasó:$e');
                               await Future.delayed(Duration(seconds: 1));
                               Navigator.of(updatingContext).pop();
                               errorPopUp(_scaffoldKey.currentContext,
                                   'Error try again', (context) {
-                                WifiDataBloc().deleteData();
+                                //WifiDataBloc().deleteData();
                                 connecting = false;
                                 changing = true;
-                                Navigator.of(_scaffoldKey.currentContext).pop();
-                                WifiDataBloc().getNetworkList();
+                                Navigator.of(_scaffoldKey.currentContext)
+                                    .pushReplacementNamed('devicePage');
+                                //Navigator.of(_scaffoldKey.currentContext).pop();
+                                //WifiDataBloc().getNetworkList();
                                 //Navigator.of(_scaffoldKey.currentContext).pushReplacementNamed('devicePage');
                               });
                             }
-                          } catch (e) {
-                            print('esto pasó:$e');
-                            await Future.delayed(Duration(seconds: 1));
-                            Navigator.of(updatingContext).pop();
-                            errorPopUp(
-                                _scaffoldKey.currentContext, 'Error try again',
-                                (context) {
-                              WifiDataBloc().deleteData();
-                              connecting = false;
-                              changing = true;
-                              Navigator.of(_scaffoldKey.currentContext).pop();
-                              WifiDataBloc().getNetworkList();
-                              //Navigator.of(_scaffoldKey.currentContext).pushReplacementNamed('devicePage');
-                            });
-                          }
-                        }),
-                      ),
-                    ],
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ]),
-            ),
-          ],
+                ]),
+              ),
+            ],
+          ),
         ),
       ),
     ));

@@ -25,7 +25,7 @@ class DevicePage extends StatefulWidget {
 
 class _DevicePageState extends State<DevicePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  String _passwordTyped;
+  String _passwordTyped = '12345678';
   WifiDataBloc scan = WifiDataBloc();
   ScrollController _scrollController = new ScrollController();
   bool _closeError = false;
@@ -37,133 +37,183 @@ class _DevicePageState extends State<DevicePage> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    //scan.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      key: _scaffoldKey,
-      body: Container(
-        color: colorBackGround,
-        child: Column(children: [
-          Container(
-              height: 10.0,
-              width: double.infinity,
+        child: WillPopScope(
+      onWillPop: () {
+        Navigator.of(context).pushReplacementNamed('homePage');
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        body: Container(
+          color: colorBackGround,
+          child: Column(children: [
+            Container(
+                height: 10.0,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: gradiente,
+                )),
+            SizedBox(height: 26.0),
+            Container(
+              height: 123,
+              width: 123,
               decoration: BoxDecoration(
-                gradient: gradiente,
-              )),
-          SizedBox(height: 26.0),
-          Container(
-            height: 123,
-            width: 123,
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(100.00)),
-            child: devicesIcon(98.0, colorMedico),
-          ),
-          SizedBox(
-            height: 8.0,
-          ),
-          Text(
-            'Devices',
-            style: TextStyle(
-                color: colorVN, fontSize: 40.0, fontWeight: FontWeight.w400),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Text('Select a device to configure',
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(100.00)),
+              child: devicesIcon(98.0, colorMedico),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
+            Text(
+              'Devices',
               style: TextStyle(
-                  color: colorVN, fontSize: 25.0, fontWeight: FontWeight.w300)),
-          StreamBuilder(
-              stream: scan.timer,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  scan.deleteData();
-
-                  firstTime = true;
-                  if (connecting) {
-                    timeout2++;
-                  }
-                  if (!connecting) {
-                    if ((timeout2 > 1) && (errorClosed) && _timeout) {
-                      // Navigator.pop(context);
-                      //errorClosed = false;
-                      //_timeout = false;
-                      if (timeout2 > 11) {
-                        timeout2 = 0;
-                      }
-                      timeout2 = 0;
-
-                      if (changing) {
-                        scan.deleteData();
-                      }
-                      scan.getNetworkList();
-                    }
-                  } else {}
-                }
-                WidgetsBinding.instance
-                    .addPostFrameCallback((_) => onAfterBuild(context));
-                return SizedBox(
-                  height: 10.0,
-                );
-              }),
-          Expanded(
-            child: Container(
-              child: StreamBuilder(
-                stream: scan.listStream,
-                builder:
-                    (BuildContext context, AsyncSnapshot<DeviceList> snapshot) {
-                  // WidgetsBinding.instance
-                  //     .addPostFrameCallback((_) => onAfterBuild(context));
-                  print('redibujando');
+                  color: colorVN, fontSize: 40.0, fontWeight: FontWeight.w400),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Text('Select a device to configure',
+                style: TextStyle(
+                    color: colorVN,
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w300)),
+            SizedBox(
+              height: 10.0,
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        statusIcon(15.0, 1),
+                        Text(
+                          'Configured',
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w100),
+                        ),
+                        statusIcon(15.0, 0),
+                        Text(
+                          'Non configured',
+                          overflow: TextOverflow.clip,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.w100),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            StreamBuilder(
+                stream: scan.timer,
+                builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    if (!errorClosed) {
-                      _closeError = true;
+                    scan.deleteData();
+
+                    firstTime = true;
+                    if (connecting) {
+                      timeout2++;
                     }
-                    _timeout = false;
-                    return Container(
-                      child: RefreshIndicator(
-                        displacement: 60.0,
-                        color: colorMedico,
-                        onRefresh: () async {
-                          if (!connecting) {
-                            if (changing) {
-                              scan.deleteData();
-                            }
-                            scan.getNetworkList();
-                          }
-                        },
-                        child: makeDeviceList(
-                            _scrollController, snapshot.data, context,
-                            (network, _tapcontext) {
-                          print(network.ssid);
-                          print(network.devType);
-                          showConnect(context, network);
-                        }),
-                      ),
-                    );
-                  } else {
-                    WifiDataBloc().getNetworkList();
-                    _timeout = true;
-                    return Container(
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            height: 40.0,
-                            width: 40.0,
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(colorMedico),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    if (!connecting) {
+                      if ((timeout2 > 1) && (errorClosed) && _timeout) {
+                        // Navigator.pop(context);
+                        //errorClosed = false;
+                        //_timeout = false;
+                        if (timeout2 > 11) {
+                          timeout2 = 0;
+                        }
+                        timeout2 = 0;
+
+                        if (changing) {
+                          changing = false;
+                          scan.deleteData();
+                        }
+                        scan.getNetworkList();
+                      }
+                    } else {}
                   }
-                },
+                  WidgetsBinding.instance
+                      .addPostFrameCallback((_) => onAfterBuild(context));
+                  return SizedBox(
+                    height: 10.0,
+                  );
+                }),
+            Expanded(
+              child: Container(
+                child: StreamBuilder(
+                  stream: scan.listStream,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DeviceList> snapshot) {
+                    // WidgetsBinding.instance
+                    //     .addPostFrameCallback((_) => onAfterBuild(context));
+                    print('redibujando');
+                    if (snapshot.hasData) {
+                      if (!errorClosed) {
+                        _closeError = true;
+                      }
+                      _timeout = false;
+                      return Container(
+                        child: RefreshIndicator(
+                          displacement: 60.0,
+                          color: colorMedico,
+                          onRefresh: () async {
+                            if (!connecting) {
+                              if (changing) {
+                                scan.deleteData();
+                              }
+                              scan.getNetworkList();
+                            }
+                          },
+                          child: makeDeviceList(
+                              _scrollController, snapshot.data, context,
+                              (network, _tapcontext) {
+                            print(network.ssid);
+                            print(network.devType);
+                            showConnect(context, network);
+                          }),
+                        ),
+                      );
+                    } else {
+                      WifiDataBloc().getNetworkList();
+                      _timeout = true;
+                      return Container(
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              height: 40.0,
+                              width: 40.0,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(colorMedico),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
               ),
             ),
-          ),
-        ]),
+          ]),
+        ),
       ),
     ));
   }
@@ -181,13 +231,21 @@ class _DevicePageState extends State<DevicePage> {
           child: AlertDialog(
             scrollable: true,
             elevation: 5.0,
-            title: Center(child: Text('Connect to device')),
             content: Container(
               margin: EdgeInsets.symmetric(horizontal: 10.0),
               //height: MediaQuery.of(context).size.height - 500,
               width: MediaQuery.of(context).size.width - 50,
               child: Column(
                 children: <Widget>[
+                  Center(
+                      child: Text(
+                    'Connect to device',
+                    style: TextStyle(fontSize: 20.0),
+                    textAlign: TextAlign.center,
+                  )),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -199,9 +257,6 @@ class _DevicePageState extends State<DevicePage> {
 
                                 // mainAxisSize: MainAxisSize.min,
                                 children: [
-                              SizedBox(
-                                height: 10.0,
-                              ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -213,14 +268,8 @@ class _DevicePageState extends State<DevicePage> {
                                   ),
                                 ],
                               ),
-                              _passwordInput(
-                                  context, 'Password', _network.password,
-                                  (String password) {
-                                _passwordTyped = password;
-                                print('Password:$password');
-                              }),
                               SizedBox(
-                                height: 5.0,
+                                height: 20.0,
                               ),
                             ]),
                       ),
@@ -304,7 +353,8 @@ class _DevicePageState extends State<DevicePage> {
                                 connecting = false;
                                 Navigator.of(updatingContext).pop();
 
-                                Navigator.of(context).pushNamed('devicePage1');
+                                Navigator.of(context)
+                                    .pushReplacementNamed('devicePage1');
                               }
                             } else {
                               Navigator.of(updatingContext).pop();
